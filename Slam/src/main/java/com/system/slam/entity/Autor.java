@@ -19,7 +19,7 @@ public class Autor {
     @Column(name = "LastName", length = 20, nullable = false)
     private String lastName;
 
-    @Column(name = "FIstName", length = 20)
+    @Column(name = "FirstName", length = 20)
     private String firstName;
 
 }
