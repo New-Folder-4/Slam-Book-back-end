@@ -22,14 +22,6 @@ public class WishListService {
     private final UserAddressRepository userAddressRepository;
     private final UserListService userListService;
 
-    /**
-     * Создать новую запись ЗПК (WishList).
-     * @param userId        ID пользователя (владелец ЗПК).
-     * @param addressId     ID адреса, куда доставлять книги.
-     * @param initialStatus начальный статус (например, "свободен").
-     * @param categoryIds   список ID категорий (жанр и пр.), которые пользователь выбрал для ЗПК.
-     * @return сохранённый WishList
-     */
     public WishList createWish(Long userId, Long addressId, String initialStatus, List<Long> categoryIds) {
         WishList wish = new WishList();
         wish.setUser(new User(userId));
