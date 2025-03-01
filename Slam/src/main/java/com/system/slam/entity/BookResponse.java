@@ -16,7 +16,7 @@ public class BookResponse {
     @Id
     @Column(name = "IdBookResponse", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idBookResponse;
+    private Long idBookResponse;
 
     @ManyToOne
     @JoinColumn(name = "IdBookLiterary", nullable = false)

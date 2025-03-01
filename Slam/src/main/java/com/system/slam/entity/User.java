@@ -16,7 +16,7 @@ public class User {
     @Id
     @Column(name = "IdUser", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idUser;
+    private Long idUser;
 
     @Column(name = "FirstName", length = 25, nullable = false)
     private String firstName;
@@ -55,4 +55,7 @@ public class User {
     @Column(name = "IsSuperUser", nullable = false)
     private boolean isSuperUser;
 
+    public User(Long id) {
+        this.idUser = id;
+    }
 }

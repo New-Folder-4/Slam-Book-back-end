@@ -19,7 +19,7 @@ public class WishList {
     @Id
     @Column(name = "IdWishList", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idWishList;
+    private Long idWishList;
 
     @ManyToOne
     @JoinColumn(name = "IdUser", nullable = false)

@@ -1,7 +1,5 @@
 package com.system.slam.entity.list;
 
-import com.system.slam.entity.list.ExchangeList;
-import com.system.slam.entity.list.OfferList;
 import lombok.*;
 import jakarta.persistence.*;
 
@@ -16,7 +14,7 @@ public class UserExchangeList {
     @Id
     @Column(name = "IdUserExchangeList", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idUserExchangeList;
+    private Long idUserExchangeList;
 
     @ManyToOne
     @JoinColumn(name = "IdExchangeList", nullable = false)

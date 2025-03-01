@@ -16,7 +16,7 @@ public class ExchangeList {
     @Id
     @Column(name = "IdExchangeList", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idExchangeList;
+    private Long idExchangeList;
 
     @ManyToOne
     @JoinColumn(name = "IdOfferList1", nullable = false)

@@ -16,7 +16,7 @@ public class UserMsg {
     @Id
     @Column(name = "IdUserMsg", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idUserMsg;
+    private Long idUserMsg;
 
     @ManyToOne
     @JoinColumn(name = "IdUser", nullable = false)
