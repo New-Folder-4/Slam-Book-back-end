@@ -14,7 +14,7 @@ public class BookLiterary {
     @Id
     @Column(name = "IdBookLiterary", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idBookLiterary;
+    private Long idBookLiterary;
 
     @ManyToOne
     @JoinColumn(name = "IdAutor", nullable = false)

@@ -15,7 +15,7 @@ public class UserValueCategory {
     @Id
     @Column(name = "IdUserValueCategory", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idUserValueCategory;
+    private Long idUserValueCategory;
 
     @ManyToOne
     @JoinColumn(name = "IdUserList", nullable = false)

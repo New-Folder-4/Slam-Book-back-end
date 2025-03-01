@@ -14,7 +14,7 @@ public class UserAddress {
     @Id
     @Column(name = "IdUserAddress", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idUserAddress;
+    private Long idUserAddress;
 
     @ManyToOne
     @JoinColumn(name = "IdUser", nullable = false)
@@ -40,5 +40,9 @@ public class UserAddress {
 
     @Column(name = "IsDefault", nullable = false)
     private boolean isDefault;
+
+    public UserAddress(Long id) {
+        this.idUserAddress = id;
+    }
 
 }

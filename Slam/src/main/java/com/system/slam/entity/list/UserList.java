@@ -14,12 +14,12 @@ public class UserList {
     @Id
     @Column(name = "IdUserList", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idUserList;
+    private Long idUserList;
 
     @Column(name = "TypeList", nullable = false)
     private Integer typeList;
 
     @Column(name = "IdList", nullable = false)
-    private Integer idList;
+    private Long idList;
 }
 

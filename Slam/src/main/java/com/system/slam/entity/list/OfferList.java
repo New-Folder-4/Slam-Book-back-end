@@ -19,7 +19,7 @@ public class OfferList {
     @Id
     @Column(name = "IdOfferList", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idOfferList;
+    private Long idOfferList;
 
     @ManyToOne
     @JoinColumn(name = "IdBookLiterary", nullable = false)
