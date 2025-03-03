@@ -49,7 +49,7 @@ public class UserListService {
         List<UserList> userLists = userListRepository.findAllByIdListAndTypeList(idList, typeList);
 
         for (UserList ul : userLists) {
-            userValueCategoryRepository.deleteAllByIdUserList(ul.getIdUserList());
+            userValueCategoryRepository.deleteAllByUserList_IdUserList(ul.getIdUserList());
         }
         userListRepository.deleteAll(userLists);
         addCategoriesToList(idList, typeList, newCategoryIds);
@@ -58,7 +58,7 @@ public class UserListService {
     public void deleteByListIdAndType(Long idList, int typeList) {
         List<UserList> userLists = userListRepository.findAllByIdListAndTypeList(idList, typeList);
         for (UserList ul : userLists) {
-            userValueCategoryRepository.deleteAllByIdUserList(ul.getIdUserList());
+            userValueCategoryRepository.deleteAllByUserList_IdUserList(ul.getIdUserList());
         }
         userListRepository.deleteAll(userLists);
     }
