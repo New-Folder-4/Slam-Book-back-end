@@ -2,16 +2,19 @@ package com.system.slam.service;
 
 import com.system.slam.entity.Autor;
 import com.system.slam.repository.AutorRepository;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
 public class AutorService {
 
     private final AutorRepository autorRepository;
+
+    @Autowired
+    public AutorService(AutorRepository autorRepository) {
+        this.autorRepository = autorRepository;
+    }
 
     public Autor createAuthor(String firstName, String lastName) {
         Autor autor = new Autor();

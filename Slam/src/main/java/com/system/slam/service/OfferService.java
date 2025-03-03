@@ -8,14 +8,12 @@ import com.system.slam.repository.BookLiteraryRepository;
 import com.system.slam.repository.StatusRepository;
 import com.system.slam.repository.list.OfferListRepository;
 import com.system.slam.service.list.UserListService;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class OfferService {
 
     private final OfferListRepository offerListRepository;
@@ -23,6 +21,19 @@ public class OfferService {
     private final StatusRepository statusRepository;
     private final UserListService userListService;
     private final UserService userService;
+
+    @Autowired
+    public OfferService(OfferListRepository offerListRepository,
+                        BookLiteraryRepository bookLiteraryRepository,
+                        StatusRepository statusRepository,
+                        UserListService userListService,
+                        UserService userService) {
+        this.offerListRepository = offerListRepository;
+        this.bookLiteraryRepository = bookLiteraryRepository;
+        this.statusRepository = statusRepository;
+        this.userListService = userListService;
+        this.userService = userService;
+    }
 
     public OfferList createOffer(
             Long userId,

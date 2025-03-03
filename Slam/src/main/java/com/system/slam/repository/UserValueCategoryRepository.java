@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserValueCategoryRepository extends JpaRepository<UserValueCategory, Long> {
-    void deleteAllByIdUserList(Long idUserList);
+    void deleteAllByUserList_IdUserList(Long id);
 
 }

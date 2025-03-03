@@ -6,18 +6,25 @@ import com.system.slam.entity.list.UserList;
 import com.system.slam.repository.CategoryRepository;
 import com.system.slam.repository.UserValueCategoryRepository;
 import com.system.slam.repository.list.UserListRepository;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class UserListService {
 
     private final UserListRepository userListRepository;
     private final UserValueCategoryRepository userValueCategoryRepository;
     private final CategoryRepository categoryRepository;
+
+    @Autowired
+    public UserListService(UserListRepository userListRepository,
+                           UserValueCategoryRepository userValueCategoryRepository,
+                           CategoryRepository categoryRepository) {
+        this.userListRepository = userListRepository;
+        this.userValueCategoryRepository = userValueCategoryRepository;
+        this.categoryRepository = categoryRepository;
+    }
 
     public void addCategoriesToList(Long idList, int typeList, List<Long> categoryIds) {
         UserList userList = new UserList();
@@ -42,7 +49,7 @@ public class UserListService {
         List<UserList> userLists = userListRepository.findAllByIdListAndTypeList(idList, typeList);
 
         for (UserList ul : userLists) {
-            userValueCategoryRepository.deleteAllByIdUserList(ul.getIdUserList());
+            userValueCategoryRepository.deleteAllByUserList_IdUserList(ul.getIdUserList());
         }
         userListRepository.deleteAll(userLists);
         addCategoriesToList(idList, typeList, newCategoryIds);
@@ -51,7 +58,7 @@ public class UserListService {
     public void deleteByListIdAndType(Long idList, int typeList) {
         List<UserList> userLists = userListRepository.findAllByIdListAndTypeList(idList, typeList);
         for (UserList ul : userLists) {
-            userValueCategoryRepository.deleteAllByIdUserList(ul.getIdUserList());
+            userValueCategoryRepository.deleteAllByUserList_IdUserList(ul.getIdUserList());
         }
         userListRepository.deleteAll(userLists);
     }
