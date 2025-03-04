@@ -3,7 +3,6 @@ package com.system.slam.repository;
 import com.system.slam.entity.Status;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-
 import java.util.Optional;
 
 @Repository

@@ -1,6 +1,6 @@
 package com.system.slam.service;
 
-import com.system.slam.entity.Autor;
+import com.system.slam.entity.Author;
 import com.system.slam.entity.BookLiterary;
 import com.system.slam.repository.BookLiteraryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,21 +12,21 @@ import java.util.stream.Collectors;
 public class BookLiteraryService {
 
     private final BookLiteraryRepository bookLiteraryRepository;
-    private final AutorService autorService;
+    private final AuthorService authorService;
 
     @Autowired
     public BookLiteraryService(BookLiteraryRepository bookLiteraryRepository,
-                               AutorService autorService) {
+                               AuthorService authorService) {
         this.bookLiteraryRepository = bookLiteraryRepository;
-        this.autorService = autorService;
+        this.authorService = authorService;
     }
 
-    public BookLiterary createBookLiterary(Long autorId, String bookName, String note) {
+    public BookLiterary createBookLiterary(Long authorId, String bookName, String note) {
 
-        Autor autor = autorService.getAuthor(autorId);
+        Author author = authorService.getAuthor(authorId);
 
         BookLiterary book = new BookLiterary();
-        book.setAutor(autor);
+        book.setAutor(author);
         book.setBookName(bookName);
         book.setNote(note);
 
