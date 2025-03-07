@@ -13,7 +13,7 @@ public class BookLiterary {
     private Long idBookLiterary;
 
     @ManyToOne
-    @JoinColumn(name = "IdAutor", nullable = false)
+    @JoinColumn(name = "IdAuthor", nullable = false)
     private Author author;
 
     @Column(name = "BookName", length = 50, nullable = false)

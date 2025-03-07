@@ -659,7 +659,7 @@ components:
     AuthorDto:
       type: object
       properties:
-        idAutor:
+        idAuthor:
           type: integer
         firstName:
           type: string
@@ -670,7 +670,7 @@ components:
       properties:
         idBookLiterary:
           type: integer
-        autorId:
+        idAuthor:
           type: integer
         bookName:
           type: string
