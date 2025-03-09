@@ -1,0 +1,23 @@
+package com.system.slam.service;
+
+import com.system.slam.repository.UserRepository;
+import org.springframework.stereotype.Service;
+
+@Service
+public class UserValidationService {
+
+    private final UserRepository userRepository;
+
+    public UserValidationService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    public void validateUserExists(String userName, String email) {
+        if (userRepository.findByUserName(userName).isPresent()) {
+            throw new RuntimeException("User with this username already exists");
+        }
+        if (userRepository.findByEmail(email).isPresent()) {
+            throw new RuntimeException("User with this mail already exists");
+        }
+    }
+}
