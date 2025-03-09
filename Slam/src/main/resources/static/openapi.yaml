@@ -36,6 +36,32 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/LoginResponse'
+  /auth/staff:
+    post:
+      summary: Регистрация персонала
+      requestBody:
+        description: Данные для регистрации
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '200':
+          description: Персонал успешно зарегистрирован
+  /auth/admin:
+    post:
+      summary: Регистрация администратора
+      requestBody:
+        description: Данные для регистрации
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '200':
+          description: Администратор успешно зарегистрирован
 
   /user/profile:
     get:
