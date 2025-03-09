@@ -4,13 +4,13 @@ import jakarta.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "Autor")
-public class Autor {
+@Table(name = "Author")
+public class Author {
 
     @Id
-    @Column(name = "IdAutor", nullable = false)
+    @Column(name = "idAuthor", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idAutor;
+    private Long idAuthor;
 
     @Column(name = "LastName", length = 20, nullable = false)
     private String lastName;
@@ -18,22 +18,22 @@ public class Autor {
     @Column(name = "FirstName", length = 20)
     private String firstName;
 
-    public Autor() {}
+    public Author() {}
 
-    public Autor(Long idAutor,
-                 String lastName,
-                 String firstName) {
-        this.idAutor = idAutor;
+    public Author(Long idAuthor,
+                  String lastName,
+                  String firstName) {
+        this.idAuthor = idAuthor;
         this.lastName = lastName;
         this.firstName = firstName;
     }
 
-    public Long getIdAutor() {
-        return idAutor;
+    public Long getIdAuthor() {
+        return idAuthor;
     }
 
-    public void setIdAutor(Long idAutor) {
-        this.idAutor = idAutor;
+    public void setIdAuthor(Long idAuthor) {
+        this.idAuthor = idAuthor;
     }
 
     public String getLastName() {
@@ -56,21 +56,21 @@ public class Autor {
     public boolean equals(Object object) {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
-        Autor autor = (Autor) object;
-        return Objects.equals(idAutor, autor.idAutor) &&
-                Objects.equals(lastName, autor.lastName) &&
-                Objects.equals(firstName, autor.firstName);
+        Author author = (Author) object;
+        return Objects.equals(idAuthor, author.idAuthor) &&
+                Objects.equals(lastName, author.lastName) &&
+                Objects.equals(firstName, author.firstName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(idAutor, lastName, firstName);
+        return Objects.hash(idAuthor, lastName, firstName);
     }
 
     @Override
     public String toString() {
         return "Autor{" +
-                "idAutor=" + idAutor +
+                "idAutor=" + idAuthor +
                 ", lastName='" + lastName + '\'' +
                 ", firstName='" + firstName + '\'' +
                 '}';

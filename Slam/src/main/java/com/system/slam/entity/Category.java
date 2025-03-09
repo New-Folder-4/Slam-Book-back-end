@@ -78,7 +78,8 @@ public class Category {
 
     @Override
     public int hashCode() {
-        return Objects.hash(idCategory, name, idParent, multiSelect);
+        return Objects.hash(idCategory, name,
+                idParent, multiSelect);
     }
 
     @Override
