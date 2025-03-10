@@ -12,7 +12,6 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-
     private final UserValidationService userValidationService;
 
 
@@ -31,6 +30,7 @@ public class UserService {
 
     public User registerUser(User user, boolean isStaff, boolean isSuperUser) {
         userValidationService.validateUserExists(user.getUserName(), user.getEmail());
+
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setStaff(isStaff);
