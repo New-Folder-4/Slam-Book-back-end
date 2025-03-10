@@ -13,8 +13,8 @@ public class BookLiterary {
     private Long idBookLiterary;
 
     @ManyToOne
-    @JoinColumn(name = "IdAutor", nullable = false)
-    private Autor autor;
+    @JoinColumn(name = "IdAuthor", nullable = false)
+    private Author author;
 
     @Column(name = "BookName", length = 50, nullable = false)
     private String bookName;
@@ -25,11 +25,11 @@ public class BookLiterary {
     public BookLiterary() {}
 
     public BookLiterary(Long idBookLiterary,
-                        Autor autor,
+                        Author author,
                         String bookName,
                         String note) {
         this.idBookLiterary = idBookLiterary;
-        this.autor = autor;
+        this.author = author;
         this.bookName = bookName;
         this.note = note;
     }
@@ -42,12 +42,12 @@ public class BookLiterary {
         this.idBookLiterary = idBookLiterary;
     }
 
-    public Autor getAutor() {
-        return autor;
+    public Author getAutor() {
+        return author;
     }
 
-    public void setAutor(Autor autor) {
-        this.autor = autor;
+    public void setAutor(Author author) {
+        this.author = author;
     }
 
     public String getBookName() {
@@ -72,21 +72,21 @@ public class BookLiterary {
         if (object == null || getClass() != object.getClass()) return false;
         BookLiterary that = (BookLiterary) object;
         return Objects.equals(idBookLiterary, that.idBookLiterary) &&
-                Objects.equals(autor, that.autor) &&
+                Objects.equals(author, that.author) &&
                 Objects.equals(bookName, that.bookName) &&
                 Objects.equals(note, that.note);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(idBookLiterary, autor, bookName, note);
+        return Objects.hash(idBookLiterary, author, bookName, note);
     }
 
     @Override
     public String toString() {
         return "BookLiterary{" +
                 "idBookLiterary=" + idBookLiterary +
-                ", autor=" + autor +
+                ", autor=" + author +
                 ", bookName='" + bookName + '\'' +
                 ", note='" + note + '\'' +
                 '}';

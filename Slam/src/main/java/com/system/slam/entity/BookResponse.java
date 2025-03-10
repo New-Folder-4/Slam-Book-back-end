@@ -109,7 +109,8 @@ public class BookResponse {
 
     @Override
     public int hashCode() {
-        return Objects.hash(idBookResponse, bookLiterary, user, createAt, response, note);
+        return Objects.hash(idBookResponse, bookLiterary,
+                user, createAt, response, note);
     }
 
     @Override

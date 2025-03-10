@@ -1,0 +1,829 @@
+openapi: 3.0.3
+info:
+  title: Book Changer API
+  version: "1.0.0"
+  description: Документация API для сервиса обмена книгами.
+servers:
+  - url: https://book-changer.ru
+paths:
+  /auth/register:
+    post:
+      summary: Регистрация пользователя
+      requestBody:
+        description: Данные для регистрации
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '200':
+          description: Пользователь успешно зарегистрирован
+  /auth/login:
+    post:
+      summary: Авторизация пользователя
+      requestBody:
+        description: Данные для входа
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Токен авторизации
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+  /auth/staff:
+    post:
+      summary: Регистрация персонала
+      requestBody:
+        description: Данные для регистрации
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '200':
+          description: Персонал успешно зарегистрирован
+  /auth/admin:
+    post:
+      summary: Регистрация администратора
+      requestBody:
+        description: Данные для регистрации
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '200':
+          description: Администратор успешно зарегистрирован
+
+  /user/profile:
+    get:
+      summary: Получить профиль пользователя
+      responses:
+        '200':
+          description: Данные профиля
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfileDto'
+    put:
+      summary: Обновить профиль пользователя
+      requestBody:
+        description: Обновленные данные профиля
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserProfileDto'
+      responses:
+        '200':
+          description: Профиль обновлен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfileDto'
+
+  /user/addresses:
+    get:
+      summary: Получить список адресов пользователя
+      responses:
+        '200':
+          description: Список адресов
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserAddressDto'
+    post:
+      summary: Создать новый адрес
+      requestBody:
+        description: Данные адреса
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserAddressDto'
+      responses:
+        '200':
+          description: Адрес создан
+
+  /user/addresses/{addressId}:
+    put:
+      summary: Обновить адрес пользователя
+      parameters:
+        - name: addressId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Обновленные данные адреса
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserAddressDto'
+      responses:
+        '200':
+          description: Адрес обновлен
+    delete:
+      summary: Удалить адрес пользователя
+      parameters:
+        - name: addressId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Адрес удален
+
+  /authors:
+    post:
+      summary: Создать автора
+      requestBody:
+        description: Данные автора
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthorDto'
+      responses:
+        '200':
+          description: Автор создан
+    get:
+      summary: Получить список авторов
+      responses:
+        '200':
+          description: Список авторов
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AuthorDto'
+  /authors/{id}:
+    get:
+      summary: Получить автора по ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Данные автора
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthorDto'
+    put:
+      summary: Обновить автора
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Обновленные данные автора
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthorDto'
+      responses:
+        '200':
+          description: Автор обновлен
+    delete:
+      summary: Удалить автора
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Автор удален
+
+  /books:
+    post:
+      summary: Создать книгу
+      requestBody:
+        description: Данные книги
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookDto'
+      responses:
+        '200':
+          description: Книга создана
+    get:
+      summary: Получить список книг
+      responses:
+        '200':
+          description: Список книг
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BookDto'
+  /books/{id}:
+    get:
+      summary: Получить книгу по ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Данные книги
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookDto'
+    put:
+      summary: Обновить книгу
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Обновленные данные книги
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookDto'
+      responses:
+        '200':
+          description: Книга обновлена
+    delete:
+      summary: Удалить книгу
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Книга удалена
+
+  /wishes:
+    post:
+      summary: Создать ЗПК (Wish)
+      requestBody:
+        description: Данные ЗПК
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WishDto'
+      responses:
+        '200':
+          description: ЗПК создана
+    put:
+      summary: Обновить ЗПК
+      requestBody:
+        description: Обновленные данные ЗПК
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WishDto'
+      responses:
+        '200':
+          description: ЗПК обновлена
+  /wishes/{id}:
+    delete:
+      summary: Удалить ЗПК
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: ЗПК удалена
+  /wishes/my:
+    get:
+      summary: Получить все ЗПК текущего пользователя
+      responses:
+        '200':
+          description: Список ЗПК пользователя
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WishDto'
+
+  /offers:
+    post:
+      summary: Создать ППК (Offer)
+      requestBody:
+        description: Данные ППК
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OfferDto'
+      responses:
+        '200':
+          description: ППК создана
+    put:
+      summary: Обновить ППК
+      requestBody:
+        description: Обновленные данные ППК
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OfferDto'
+      responses:
+        '200':
+          description: ППК обновлена
+  /offers/{id}:
+    delete:
+      summary: Удалить ППК
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: ППК удалена
+  /offers/my:
+    get:
+      summary: Получить все ППК текущего пользователя
+      responses:
+        '200':
+          description: Список ППК пользователя
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OfferDto'
+
+  /reviews:
+    post:
+      summary: Создать отзыв
+      requestBody:
+        description: Данные отзыва
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReviewDto'
+      responses:
+        '200':
+          description: Отзыв создан
+  /reviews/by-book/{bookId}:
+    get:
+      summary: Получить отзывы по книге
+      parameters:
+        - name: bookId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Список отзывов по книге
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ReviewDto'
+  /reviews/by-user/{userId}:
+    get:
+      summary: Получить отзывы пользователя
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Список отзывов пользователя
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ReviewDto'
+
+  /exchange/matches:
+    get:
+      summary: Получить варианты обмена (совпадения)
+      responses:
+        '200':
+          description: Список вариантов обмена
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ExchangeMatchDto'
+  /exchange/propose:
+    post:
+      summary: Инициировать обмен (предложить вариант)
+      requestBody:
+        description: Данные для создания обмена (offerId, wishId)
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                offerId:
+                  type: integer
+                wishId:
+                  type: integer
+      responses:
+        '200':
+          description: Обмен инициирован
+  /exchange/confirm/{exchangeId}:
+    post:
+      summary: Подтвердить обмен
+      parameters:
+        - name: exchangeId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Обмен подтвержден
+  /exchange/track:
+    post:
+      summary: Указать трек-номер отправки
+      requestBody:
+        description: Данные для трек-номера (exchangeId, userId, trackNumber)
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                exchangeId:
+                  type: integer
+                userId:
+                  type: integer
+                trackNumber:
+                  type: string
+      responses:
+        '200':
+          description: Трек-номер записан
+  /exchange/receive:
+    post:
+      summary: Подтвердить получение книги
+      requestBody:
+        description: Данные для подтверждения (exchangeId, userId)
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                exchangeId:
+                  type: integer
+                userId:
+                  type: integer
+      responses:
+        '200':
+          description: Получение подтверждено
+  /exchange/active:
+    get:
+      summary: Получить активные обмены
+      responses:
+        '200':
+          description: Список активных обменов
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ExchangeDto'
+  /exchange/history:
+    get:
+      summary: Получить историю обменов
+      responses:
+        '200':
+          description: Список завершенных обменов
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ExchangeDto'
+
+  /admin/users:
+    get:
+      summary: Получить список всех пользователей
+      responses:
+        '200':
+          description: Список пользователей
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserProfileDto'
+  /admin/blockUser/{id}:
+    post:
+      summary: Заблокировать пользователя
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Пользователь заблокирован
+  /admin/messages:
+    get:
+      summary: Получить список всех сообщений от пользователей
+      responses:
+        '200':
+          description: Список сообщений
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MessageDto'
+  /admin/messages/answer:
+    post:
+      summary: Ответить на сообщение пользователя
+      requestBody:
+        description: Данные ответа (messageId, text)
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnswerMsgDto'
+      responses:
+        '200':
+          description: Ответ отправлен
+
+  /delivery/track-status:
+    get:
+      summary: Получить статус доставки по трек-номеру
+      parameters:
+        - name: trackNumber
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Статус доставки
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeliveryStatusDto'
+  /isbn/info:
+    get:
+      summary: Получить информацию по ISBN
+      parameters:
+        - name: isbn
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Информация о книге
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookInfoDto'
+components:
+  schemas:
+    RegisterRequest:
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+    LoginRequest:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+    LoginResponse:
+      type: object
+      properties:
+        token:
+          type: string
+    UserProfileDto:
+      type: object
+      properties:
+        idUser:
+          type: integer
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+        userName:
+          type: string
+        rating:
+          type: integer
+    UserAddressDto:
+      type: object
+      properties:
+        idUserAddress:
+          type: integer
+        addrIndex:
+          type: string
+        addrCity:
+          type: string
+        addrStreet:
+          type: string
+        addrHouse:
+          type: string
+        addrStructure:
+          type: string
+        addrApart:
+          type: string
+        isDefault:
+          type: boolean
+    AuthorDto:
+      type: object
+      properties:
+        idAuthor:
+          type: integer
+        firstName:
+          type: string
+        lastName:
+          type: string
+    BookDto:
+      type: object
+      properties:
+        idBookLiterary:
+          type: integer
+        idAuthor:
+          type: integer
+        bookName:
+          type: string
+        note:
+          type: string
+    WishDto:
+      type: object
+      properties:
+        idWishList:
+          type: integer
+        userId:
+          type: integer
+        addressId:
+          type: integer
+        status:
+          type: string
+        createAt:
+          type: string
+          format: date-time
+        updateAt:
+          type: string
+          format: date-time
+        categoryIds:
+          type: array
+          items:
+            type: integer
+    OfferDto:
+      type: object
+      properties:
+        idOfferList:
+          type: integer
+        userId:
+          type: integer
+        bookLiteraryId:
+          type: integer
+        isbn:
+          type: string
+        yearPublishing:
+          type: string
+          format: date-time
+        createAt:
+          type: string
+          format: date-time
+        updateAt:
+          type: string
+          format: date-time
+        status:
+          type: string
+        categoryIds:
+          type: array
+          items:
+            type: integer
+    ReviewDto:
+      type: object
+      properties:
+        idBookResponse:
+          type: integer
+        bookLiteraryId:
+          type: integer
+        userId:
+          type: integer
+        createAt:
+          type: string
+          format: date-time
+        response:
+          type: string
+    ExchangeDto:
+      type: object
+      properties:
+        exchangeId:
+          type: integer
+        offerId:
+          type: integer
+        wishId:
+          type: integer
+        isBoth:
+          type: boolean
+        createAt:
+          type: string
+          format: date-time
+    ExchangeMatchDto:
+      type: object
+      properties:
+        matchType:
+          type: string
+          description: Тип совпадения (полное, частичное или другое)
+        offers:
+          type: array
+          items:
+            $ref: '#/components/schemas/OfferDto'
+    MessageDto:
+      type: object
+      properties:
+        id:
+          type: integer
+        userId:
+          type: integer
+        text:
+          type: string
+        createAt:
+          type: string
+          format: date-time
+    AnswerMsgDto:
+      type: object
+      properties:
+        messageId:
+          type: integer
+        text:
+          type: string
+    DeliveryStatusDto:
+      type: object
+      properties:
+        trackNumber:
+          type: string
+        status:
+          type: string
+    BookInfoDto:
+      type: object
+      properties:
+        isbn:
+          type: string
+        author:
+          type: string
+        bookName:
+          type: string
+        yearPublishing:
+          type: string
+          format: date-time
+        coverUrl:
+          type: string
