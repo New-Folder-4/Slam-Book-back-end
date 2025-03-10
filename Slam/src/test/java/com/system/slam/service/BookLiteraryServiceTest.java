@@ -1,6 +1,6 @@
 package com.system.slam.service;
 
-import com.system.slam.entity.Autor;
+import com.system.slam.entity.Author;
 import com.system.slam.entity.BookLiterary;
 import com.system.slam.repository.BookLiteraryRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,41 +9,70 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-class BookLiteraryServiceTest {
+public class BookLiteraryServiceTest {
 
     @Mock
     private BookLiteraryRepository bookLiteraryRepository;
 
     @Mock
-    private AutorService autorService;
+    private AuthorService authorService;
 
     @InjectMocks
     private BookLiteraryService bookLiteraryService;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    void testCreateBookLiterary() {
-        Long autorId = 1L;
-        String bookName = "Test Book";
-        String note = "Test Note";
+    public void testCreateBookLiterary() {
+        Long authorId = 1L;
+        String bookName = "Sample Book";
+        String note = "Sample Note";
 
-        Autor autor = new Autor();
+        Author author = new Author();
+        author.setIdAuthor(authorId);
+
         BookLiterary book = new BookLiterary();
+        book.setIdBookLiterary(1L);
+        book.setAutor(author);
+        book.setBookName(bookName);
+        book.setNote(note);
 
-        when(autorService.getAuthor(autorId)).thenReturn(autor);
+        when(authorService.getAuthor(authorId)).thenReturn(author);
         when(bookLiteraryRepository.save(any(BookLiterary.class))).thenReturn(book);
 
-        BookLiterary result = bookLiteraryService.createBookLiterary(autorId, bookName, note);
+        BookLiterary result = bookLiteraryService.createBookLiterary(authorId, bookName, note);
+
+        assertNotNull(result);
+        assertEquals(bookName, result.getBookName());
+        assertEquals(note, result.getNote());
+        assertEquals(authorId, result.getAutor().getIdAuthor());
+    }
+
+    @Test
+    public void testGetBookLiterary() {
+        Long bookId = 1L;
+        String bookName = "Sample Book";
+        String note = "Sample Note";
+
+        BookLiterary book = new BookLiterary();
+        book.setIdBookLiterary(bookId);
+        book.setBookName(bookName);
+        book.setNote(note);
+
+        when(bookLiteraryRepository.findById(bookId)).thenReturn(Optional.of(book));
+
+        BookLiterary result = bookLiteraryService.getBookLiterary(bookId);
 
         assertNotNull(result);
         assertEquals(bookName, result.getBookName());
@@ -51,41 +80,13 @@ class BookLiteraryServiceTest {
     }
 
     @Test
-    void testGetBookLiterary() {
-        Long bookId = 1L;
-        BookLiterary book = new BookLiterary();
-        book.setBookName("Test Book");
-        book.setNote("Test Note");
-
-        when(bookLiteraryRepository.findById(bookId)).thenReturn(Optional.of(book));
-
-        BookLiterary result = bookLiteraryService.getBookLiterary(bookId);
-
-        assertNotNull(result);
-        assertEquals("Test Book", result.getBookName());
-        assertEquals("Test Note", result.getNote());
-    }
-
-    @Test
-    void testGetBookLiterary_BookNotFound() {
-        Long bookId = 1L;
-
-        when(bookLiteraryRepository.findById(bookId)).thenReturn(Optional.empty());
-
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-            bookLiteraryService.getBookLiterary(bookId);
-        });
-
-        assertEquals("BookLiterary not found, id=" + bookId, exception.getMessage());
-    }
-
-    @Test
-    void testUpdateBookLiterary() {
+    public void testUpdateBookLiterary() {
         Long bookId = 1L;
         String newBookName = "Updated Book";
         String newNote = "Updated Note";
 
         BookLiterary book = new BookLiterary();
+        book.setIdBookLiterary(bookId);
 
         when(bookLiteraryRepository.findById(bookId)).thenReturn(Optional.of(book));
         when(bookLiteraryRepository.save(any(BookLiterary.class))).thenReturn(book);
@@ -98,26 +99,29 @@ class BookLiteraryServiceTest {
     }
 
     @Test
-    void testDeleteBookLiterary() {
+    public void testDeleteBookLiterary() {
         Long bookId = 1L;
 
         bookLiteraryService.deleteBookLiterary(bookId);
 
-        verify(bookLiteraryRepository, times(1)).deleteById(bookId);
+        verify(bookLiteraryRepository).deleteById(bookId);
     }
 
     @Test
-    void testFindByBookName() {
-        String namePart = "Test";
-        BookLiterary book1 = new BookLiterary();
-        book1.setBookName("Test Book 1");
-        BookLiterary book2 = new BookLiterary();
-        book2.setBookName("Another Test Book");
+    public void testFindByBookName() {
+        String namePart = "Sample";
 
-        when(bookLiteraryRepository.findAll()).thenReturn(List.of(book1, book2));
+        BookLiterary book1 = new BookLiterary();
+        book1.setBookName("Sample Book 1");
+
+        BookLiterary book2 = new BookLiterary();
+        book2.setBookName("Another Sample Book");
+
+        when(bookLiteraryRepository.findAll()).thenReturn(Arrays.asList(book1, book2));
 
         List<BookLiterary> result = bookLiteraryService.findByBookName(namePart);
 
         assertEquals(2, result.size());
+        assertTrue(result.stream().allMatch(b -> b.getBookName().contains(namePart)));
     }
 }

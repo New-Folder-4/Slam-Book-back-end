@@ -15,13 +15,15 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-class OfferServiceTest {
+public class OfferServiceTest {
 
     @Mock
     private OfferListRepository offerListRepository;
@@ -42,23 +44,37 @@ class OfferServiceTest {
     private OfferService offerService;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    void testCreateOffer() {
+    public void testCreateOffer() {
         Long userId = 1L;
-        Long bookLiteraryId = 1L;
-        String isbn = "123-456";
-        LocalDateTime yearPublishing = LocalDateTime.now();
+        Long bookLiteraryId = 2L;
+        String isbn = "123-456-789";
+        LocalDateTime yearPublishing = LocalDateTime.of(2023, 1, 1, 0, 0);
         String initialStatus = "active";
-        List<Long> categoryIds = List.of(1L, 2L);
+        List<Long> categoryIds = Arrays.asList(3L, 4L);
 
         BookLiterary bookLit = new BookLiterary();
+        bookLit.setIdBookLiterary(bookLiteraryId);
+
         User user = new User();
+        user.setIdUser(userId);
+
         Status status = new Status();
+        status.setName(initialStatus);
+
         OfferList offer = new OfferList();
+        offer.setIdOfferList(1L);
+        offer.setBookLiterary(bookLit);
+        offer.setUser(user);
+        offer.setIsbn(isbn);
+        offer.setYearPublishing(yearPublishing);
+        offer.setCreateAt(LocalDateTime.now());
+        offer.setUpdateAt(LocalDateTime.now());
+        offer.setStatus(status);
 
         when(bookLiteraryRepository.findById(bookLiteraryId)).thenReturn(Optional.of(bookLit));
         when(userService.getUserById(userId)).thenReturn(user);
@@ -70,22 +86,26 @@ class OfferServiceTest {
         assertNotNull(result);
         assertEquals(isbn, result.getIsbn());
         assertEquals(yearPublishing, result.getYearPublishing());
-        verify(userListService, times(1)).addCategoriesToList(offer.getIdOfferList(), 1, categoryIds);
+        assertEquals(initialStatus, result.getStatus().getName());
+        verify(userListService).addCategoriesToList(result.getIdOfferList(), 1, categoryIds);
     }
 
     @Test
-    void testUpdateOffer() {
+    public void testUpdateOffer() {
         Long offerId = 1L;
-        String newIsbn = "654-321";
-        LocalDateTime newYearPublishing = LocalDateTime.now();
+        String newIsbn = "987-654-321";
+        LocalDateTime newYearPublishing = LocalDateTime.of(2024, 1, 1, 0, 0);
         String newStatusName = "inactive";
-        List<Long> newCategoryIds = List.of(3L, 4L);
+        List<Long> newCategoryIds = Arrays.asList(5L, 6L);
 
         OfferList offer = new OfferList();
-        Status status = new Status();
+        offer.setIdOfferList(offerId);
+
+        Status newStatus = new Status();
+        newStatus.setName(newStatusName);
 
         when(offerListRepository.findById(offerId)).thenReturn(Optional.of(offer));
-        when(statusRepository.findByName(newStatusName)).thenReturn(Optional.of(status));
+        when(statusRepository.findByName(newStatusName)).thenReturn(Optional.of(newStatus));
         when(offerListRepository.save(any(OfferList.class))).thenReturn(offer);
 
         OfferList result = offerService.updateOffer(offerId, newIsbn, newYearPublishing, newStatusName, newCategoryIds);
@@ -93,24 +113,29 @@ class OfferServiceTest {
         assertNotNull(result);
         assertEquals(newIsbn, result.getIsbn());
         assertEquals(newYearPublishing, result.getYearPublishing());
-        verify(userListService, times(1)).updateCategoriesForList(offer.getIdOfferList(), 1, newCategoryIds);
+        assertEquals(newStatusName, result.getStatus().getName());
+        verify(userListService).updateCategoriesForList(offerId, 1, newCategoryIds);
     }
 
     @Test
-    void testDeleteOffer_PhysicalDelete() {
+    public void testDeleteOfferPhysical() {
         Long offerId = 1L;
 
         offerService.deleteOffer(offerId, true);
 
-        verify(offerListRepository, times(1)).deleteById(offerId);
-        verify(userListService, times(1)).deleteByListIdAndType(offerId, 1);
+        verify(offerListRepository).deleteById(offerId);
+        verify(userListService).deleteByListIdAndType(offerId, 1);
     }
 
     @Test
-    void testDeleteOffer_LogicalDelete() {
+    public void testDeleteOfferLogical() {
         Long offerId = 1L;
+
         OfferList offer = new OfferList();
+        offer.setIdOfferList(offerId);
+
         Status deletedStatus = new Status();
+        deletedStatus.setName("deleted");
 
         when(offerListRepository.findById(offerId)).thenReturn(Optional.of(offer));
         when(statusRepository.findByName("deleted")).thenReturn(Optional.of(deletedStatus));
@@ -118,35 +143,43 @@ class OfferServiceTest {
 
         offerService.deleteOffer(offerId, false);
 
-        assertEquals(deletedStatus, offer.getStatus());
-        verify(offerListRepository, times(1)).save(offer);
+        assertEquals("deleted", offer.getStatus().getName());
+        verify(offerListRepository).save(offer);
     }
 
     @Test
-    void testGetOffer() {
+    public void testGetOffer() {
         Long offerId = 1L;
+
         OfferList offer = new OfferList();
+        offer.setIdOfferList(offerId);
 
         when(offerListRepository.findById(offerId)).thenReturn(Optional.of(offer));
 
         OfferList result = offerService.getOffer(offerId);
 
         assertNotNull(result);
+        assertEquals(offerId, result.getIdOfferList());
     }
 
     @Test
-    void testGetAllOffersByUser() {
+    public void testGetAllOffersByUser() {
         Long userId = 1L;
+
         User user = new User();
+        user.setIdUser(userId);
+
         OfferList offer1 = new OfferList();
         offer1.setUser(user);
+
         OfferList offer2 = new OfferList();
         offer2.setUser(user);
 
-        when(offerListRepository.findAll()).thenReturn(List.of(offer1, offer2));
+        when(offerListRepository.findAll()).thenReturn(Arrays.asList(offer1, offer2));
 
         List<OfferList> result = offerService.getAllOffersByUser(userId);
 
         assertEquals(2, result.size());
+        assertTrue(result.stream().allMatch(offer -> offer.getUser().getIdUser().equals(userId)));
     }
 }

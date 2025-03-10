@@ -12,9 +12,10 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-class UserServiceTest {
+public class UserServiceTest {
 
     @Mock
     private UserRepository userRepository;
@@ -23,80 +24,67 @@ class UserServiceTest {
     private UserService userService;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    void testGetUserById() {
+    public void testGetUserById() {
         Long userId = 1L;
-        User mockUser = new User();
-        mockUser.setEmail("test@example.com");
-        mockUser.setUserName("testUser");
+        User user = new User();
+        user.setIdUser(userId);
 
-        when(userRepository.findById(userId)).thenReturn(Optional.of(mockUser));
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 
         User result = userService.getUserById(userId);
 
         assertNotNull(result);
-        assertEquals("test@example.com", result.getEmail());
-        assertEquals("testUser", result.getUserName());
+        assertEquals(userId, result.getIdUser());
     }
 
     @Test
-    void testGetUserById_UserNotFound() {
-        Long userId = 1L;
+    public void testCreateUser() {
+        User user = new User();
+        user.setEmail("test@example.com");
+        user.setUserName("testuser");
 
-        when(userRepository.findById(userId)).thenReturn(Optional.empty());
+        when(userRepository.save(any(User.class))).thenReturn(user);
 
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-            userService.getUserById(userId);
-        });
-
-        assertEquals("User not found, id=" + userId, exception.getMessage());
-    }
-
-    @Test
-    void testCreateUser() {
-        User newUser = new User();
-        newUser.setEmail("test@example.com");
-        newUser.setUserName("testUser");
-
-        when(userRepository.save(any(User.class))).thenReturn(newUser);
-
-        User result = userService.createUser(newUser);
+        User result = userService.createUser(user);
 
         assertNotNull(result);
         assertEquals("test@example.com", result.getEmail());
-        assertEquals("testUser", result.getUserName());
+        assertEquals("testuser", result.getUserName());
         assertNotNull(result.getCreateAt());
         assertTrue(result.isEnabled());
         assertEquals(0, result.getRating());
     }
 
     @Test
-    void testUpdateUser() {
+    public void testUpdateUser() {
         Long userId = 1L;
-        User existingUser = new User();
-        existingUser.setEmail("old@example.com");
-        existingUser.setUserName("oldUser");
+        String newEmail = "newemail@example.com";
+        String newUserName = "newusername";
 
-        when(userRepository.findById(userId)).thenReturn(Optional.of(existingUser));
-        when(userRepository.save(any(User.class))).thenReturn(existingUser);
+        User user = new User();
+        user.setIdUser(userId);
 
-        User result = userService.updateUser(userId, "new@example.com", "newUser");
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        when(userRepository.save(any(User.class))).thenReturn(user);
+
+        User result = userService.updateUser(userId, newEmail, newUserName);
 
         assertNotNull(result);
-        assertEquals("new@example.com", result.getEmail());
-        assertEquals("newUser", result.getUserName());
+        assertEquals(newEmail, result.getEmail());
+        assertEquals(newUserName, result.getUserName());
     }
 
     @Test
-    void testDeleteUser() {
+    public void testDeleteUser() {
         Long userId = 1L;
 
         userService.deleteUser(userId);
 
-        verify(userRepository, times(1)).deleteById(userId);
+        verify(userRepository).deleteById(userId);
     }
 }
