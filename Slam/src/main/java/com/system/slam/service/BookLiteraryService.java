@@ -1,27 +1,32 @@
 package com.system.slam.service;
 
-import com.system.slam.entity.Autor;
+import com.system.slam.entity.Author;
 import com.system.slam.entity.BookLiterary;
 import com.system.slam.repository.BookLiteraryRepository;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class BookLiteraryService {
 
     private final BookLiteraryRepository bookLiteraryRepository;
-    private final AutorService autorService;
+    private final AuthorService authorService;
 
-    public BookLiterary createBookLiterary(Long autorId, String bookName, String note) {
+    @Autowired
+    public BookLiteraryService(BookLiteraryRepository bookLiteraryRepository,
+                               AuthorService authorService) {
+        this.bookLiteraryRepository = bookLiteraryRepository;
+        this.authorService = authorService;
+    }
 
-        Autor autor = autorService.getAuthor(autorId);
+    public BookLiterary createBookLiterary(Long authorId, String bookName, String note) {
+
+        Author author = authorService.getAuthor(authorId);
 
         BookLiterary book = new BookLiterary();
-        book.setAutor(autor);
+        book.setAutor(author);
         book.setBookName(bookName);
         book.setNote(note);
 

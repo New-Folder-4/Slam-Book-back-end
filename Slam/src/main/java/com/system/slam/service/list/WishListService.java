@@ -5,22 +5,27 @@ import com.system.slam.entity.User;
 import com.system.slam.entity.UserAddress;
 import com.system.slam.entity.list.WishList;
 import com.system.slam.repository.StatusRepository;
-import com.system.slam.repository.UserAddressRepository;
 import com.system.slam.repository.list.WishListRepository;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class WishListService {
 
     private final WishListRepository wishListRepository;
     private final StatusRepository statusRepository;
-    private final UserAddressRepository userAddressRepository;
     private final UserListService userListService;
+
+    @Autowired
+    public WishListService(WishListRepository wishListRepository,
+                           StatusRepository statusRepository,
+                           UserListService userListService) {
+        this.wishListRepository = wishListRepository;
+        this.statusRepository = statusRepository;
+        this.userListService = userListService;
+    }
 
     public WishList createWish(Long userId, Long addressId, String initialStatus, List<Long> categoryIds) {
         WishList wish = new WishList();
