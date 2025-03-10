@@ -2,7 +2,7 @@ package com.system.slam.service;
 
 import com.system.slam.entity.User;
 import com.system.slam.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.system.slam.service.UserValidationService;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -12,10 +12,13 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UserValidationService userValidationService;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, UserValidationService userValidationService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.userValidationService = userValidationService;
     }
 
 
@@ -26,10 +29,8 @@ public class UserService {
     }
 
     public User registerUser(User user, boolean isStaff, boolean isSuperUser) {
-        if (userRepository.findByUserName(user.getUserName()).isPresent() ||
-                userRepository.findByEmail(user.getEmail()).isPresent()) {
-            throw new RuntimeException("User already exists");
-        }
+        userValidationService.validateUserExists(user.getUserName(), user.getEmail());
+
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setStaff(isStaff);

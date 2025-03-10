@@ -2,6 +2,7 @@ package com.system.slam.controller;
 
 import com.system.slam.entity.User;
 import com.system.slam.service.UserService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,20 +20,32 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<User> registerUser(@RequestBody User user) {
-        User registeredUser = userService.registerUser(user, false, false);
-        return ResponseEntity.ok(registeredUser);
+    public ResponseEntity<?> registerUser(@RequestBody User user) { // ? - чтобы можно было вернуть как User так и String для ошибки
+        try {
+            User registeredUser = userService.registerUser(user, false, false);
+            return ResponseEntity.ok(registeredUser);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 
     @PostMapping("/register/staff")
-    public ResponseEntity<User> registerStaff(@RequestBody User user) {
-        User registeredStaff = userService.registerUser(user, true, false);
-        return ResponseEntity.ok(registeredStaff);
+    public ResponseEntity<?> registerStaff(@RequestBody User user) {
+        try {
+            User registeredStaff = userService.registerUser(user, true, false);
+            return ResponseEntity.ok(registeredStaff);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 
     @PostMapping("/register/admin")
-    public ResponseEntity<User> registerAdmin(@RequestBody User user) {
-        User registeredAdmin = userService.registerUser(user, true, true);
-        return ResponseEntity.ok(registeredAdmin);
+    public ResponseEntity<?> registerAdmin(@RequestBody User user) {
+        try {
+            User registeredAdmin = userService.registerUser(user, true, true);
+            return ResponseEntity.ok(registeredAdmin);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 }
