@@ -3,6 +3,7 @@ package com.system.slam.controller.list;
 import com.system.slam.web.dto.OfferDto;
 import com.system.slam.entity.list.OfferList;
 import com.system.slam.service.list.OfferListService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +14,7 @@ public class OfferListController {
 
     private final OfferListService offerListService;
 
+    @Autowired
     public OfferListController(OfferListService offerListService) {
         this.offerListService = offerListService;
     }
