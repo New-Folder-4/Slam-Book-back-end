@@ -16,7 +16,9 @@ public class UserService {
     private final UserValidationService userValidationService;
 
     @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, UserValidationService userValidationService) {
+    public UserService(UserRepository userRepository,
+                       PasswordEncoder passwordEncoder,
+                       UserValidationService userValidationService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.userValidationService = userValidationService;
