@@ -3,6 +3,7 @@ package com.system.slam.service;
 import com.system.slam.entity.User;
 import com.system.slam.repository.UserRepository;
 import com.system.slam.service.UserValidationService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,7 +15,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserValidationService userValidationService;
 
-
+    @Autowired
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, UserValidationService userValidationService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
