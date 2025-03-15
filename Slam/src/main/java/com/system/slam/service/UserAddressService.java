@@ -35,7 +35,6 @@ public class UserAddressService {
         address.setAddrApart(dto.getAddrApart());
         address.setDefault(dto.isDefault());
 
-        // Сохранить
         UserAddress saved = userAddressRepository.save(address);
         return convertToDto(saved);
     }
