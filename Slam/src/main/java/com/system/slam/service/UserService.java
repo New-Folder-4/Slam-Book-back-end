@@ -2,7 +2,7 @@ package com.system.slam.service;
 
 import com.system.slam.entity.User;
 import com.system.slam.repository.UserRepository;
-import com.system.slam.service.UserValidationService;
+import com.system.slam.web.dto.UserProfileDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
@@ -23,8 +23,6 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
         this.userValidationService = userValidationService;
     }
-
-
 
     public User getUserById(Long userId) {
         return userRepository.findById(userId)
@@ -59,6 +57,41 @@ public class UserService {
             user.setUserName(newUserName);
         }
         return userRepository.save(user);
+    }
+
+    public User updateUserProfile(Long userId, UserProfileDto dto) {
+        User user = getUserById(userId);
+
+        if (dto.getFirstName() != null) {
+            user.setFirstName(dto.getFirstName());
+        }
+        if (dto.getLastName() != null) {
+            user.setLastName(dto.getLastName());
+        }
+        if (dto.getEmail() != null) {
+            user.setEmail(dto.getEmail());
+        }
+        if (dto.getUserName() != null) {
+            user.setUserName(dto.getUserName());
+        }
+
+        return userRepository.save(user);
+    }
+
+    public UserProfileDto convertToUserProfileDto(User user) {
+        return new UserProfileDto(
+                user.getIdUser(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getEmail(),
+                user.getUserName(),
+                user.getRating()
+        );
+    }
+
+    public UserProfileDto getUserProfile(Long userId) {
+        User user = getUserById(userId);
+        return convertToUserProfileDto(user);
     }
 
     public void deleteUser(Long userId) {
