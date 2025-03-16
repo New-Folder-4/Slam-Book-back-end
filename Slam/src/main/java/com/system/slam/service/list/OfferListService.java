@@ -1,4 +1,4 @@
-package com.system.slam.service;
+package com.system.slam.service.list;
 
 import com.system.slam.entity.BookLiterary;
 import com.system.slam.entity.Status;
@@ -7,14 +7,14 @@ import com.system.slam.entity.list.OfferList;
 import com.system.slam.repository.BookLiteraryRepository;
 import com.system.slam.repository.StatusRepository;
 import com.system.slam.repository.list.OfferListRepository;
-import com.system.slam.service.list.UserListService;
+import com.system.slam.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-public class OfferService {
+public class OfferListService {
 
     private final OfferListRepository offerListRepository;
     private final BookLiteraryRepository bookLiteraryRepository;
@@ -23,11 +23,11 @@ public class OfferService {
     private final UserService userService;
 
     @Autowired
-    public OfferService(OfferListRepository offerListRepository,
-                        BookLiteraryRepository bookLiteraryRepository,
-                        StatusRepository statusRepository,
-                        UserListService userListService,
-                        UserService userService) {
+    public OfferListService(OfferListRepository offerListRepository,
+                            BookLiteraryRepository bookLiteraryRepository,
+                            StatusRepository statusRepository,
+                            UserListService userListService,
+                            UserService userService) {
         this.offerListRepository = offerListRepository;
         this.bookLiteraryRepository = bookLiteraryRepository;
         this.statusRepository = statusRepository;

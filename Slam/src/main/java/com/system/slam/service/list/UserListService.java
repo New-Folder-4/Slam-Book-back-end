@@ -9,6 +9,7 @@ import com.system.slam.repository.list.UserListRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserListService {
@@ -62,5 +63,14 @@ public class UserListService {
         }
         userListRepository.deleteAll(userLists);
     }
+
+    public List<Long> getCategoryIdsForList(Long idList, int typeList) {
+        return userListRepository.findAllByIdListAndTypeList(idList, typeList).stream()
+                .flatMap(userList -> userValueCategoryRepository
+                        .findAllByUserList_IdUserList(userList.getIdUserList()).stream()
+                        .map(uvc -> uvc.getCategory().getIdCategory()))
+                .collect(Collectors.toList());
+    }
+
 }
 
