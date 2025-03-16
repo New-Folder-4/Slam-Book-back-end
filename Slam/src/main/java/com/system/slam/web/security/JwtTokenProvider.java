@@ -51,6 +51,6 @@ public class JwtTokenProvider {
     }
 
     private SecretKey getSigningKey() {
-        return Keys.hmacShaKeyFor(jwtSecret.getBytes());
+        return Keys.secretKeyFor(SignatureAlgorithm.HS512);
     }
 }
