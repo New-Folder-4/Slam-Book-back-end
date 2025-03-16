@@ -8,11 +8,14 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import com.system.slam.web.dto.UserProfileDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
+import java.util.Collection;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Service
@@ -63,9 +66,10 @@ public class UserService {
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            String usernameOrId = authentication.getName();
+            // Получаем роли пользователя
+            Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
 
-            return jwtTokenProvider.generateToken(usernameOrId);
+            return jwtTokenProvider.generateToken(username, authorities);
 
         } catch (BadCredentialsException e) {
             throw new RuntimeException("Invalid password");
