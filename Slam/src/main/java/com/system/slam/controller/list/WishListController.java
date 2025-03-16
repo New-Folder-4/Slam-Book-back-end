@@ -1,4 +1,81 @@
 package com.system.slam.controller.list;
 
+import com.system.slam.web.dto.WishDto;
+import com.system.slam.entity.list.WishList;
+import com.system.slam.service.list.WishListService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@RestController
+@RequestMapping("/wishes")
 public class WishListController {
+
+    private final WishListService wishListService;
+
+    @Autowired
+    public WishListController(WishListService wishListService) {
+        this.wishListService = wishListService;
+    }
+
+    @PostMapping
+    public WishDto createWish(@RequestBody WishDto dto) {
+        WishList saved = wishListService.createWish(
+                dto.getUserId(),
+                dto.getAddressId(),
+                dto.getStatus(),
+                dto.getCategoryIds()
+        );
+        return convertToDto(saved, dto.getCategoryIds());
+    }
+
+    @PutMapping("/{id}")
+    public WishDto updateWish(@PathVariable Long id, @RequestBody WishDto dto) {
+        WishList updated = wishListService.updateWish(
+                id,
+                dto.getAddressId(),
+                dto.getStatus(),
+                dto.getCategoryIds()
+        );
+        return convertToDto(updated, dto.getCategoryIds());
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteWish(@PathVariable Long id,
+                           @RequestParam(defaultValue = "false") boolean physicalDelete) {
+        wishListService.deleteWish(id, physicalDelete);
+    }
+
+    @GetMapping("/my")
+    public List<WishDto> getMyWishes() {
+        Long userId = getCurrentUserId();
+        List<WishList> allWishes = wishListService.getAllByUserId(userId);
+
+        List<WishDto> result = new ArrayList<>();
+        for (WishList wish : allWishes) {
+            List<Long> catIds = wishListService.getCategoryIdsForWish(wish.getIdWishList());
+            result.add(convertToDto(wish, catIds));
+        }
+        return result;
+    }
+
+    private Long getCurrentUserId() {
+        return 1L; // для теста
+    }
+
+    private WishDto convertToDto(WishList wish, List<Long> categoryIds) {
+        WishDto dto = new WishDto();
+        dto.setIdWishList(wish.getIdWishList());
+        dto.setUserId((wish.getUser() != null) ? wish.getUser().getIdUser() : null);
+        dto.setAddressId((wish.getUserAddress() != null) ? wish.getUserAddress().getIdUserAddress() : null);
+        dto.setStatus((wish.getStatus() != null) ? wish.getStatus().getName() : null);
+        dto.setCreateAt(wish.getCreateAt());
+        dto.setUpdateAt(wish.getUpdateAt());
+        dto.setCategoryIds(categoryIds);
+
+        return dto;
+    }
 }
+
