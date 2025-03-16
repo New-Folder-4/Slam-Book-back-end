@@ -20,4 +20,12 @@ public class UserValidationService {
             throw new RuntimeException("User with this mail already exists");
         }
     }
+
+    public void userIsNotExists(String userName) {
+        if (userRepository.findByUserName(userName).isEmpty()) {
+            throw new RuntimeException("User with this username is not exists");
+        }
+    }
+
+
 }

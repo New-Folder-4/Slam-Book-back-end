@@ -2,6 +2,8 @@ package com.system.slam.controller;
 
 import com.system.slam.entity.User;
 import com.system.slam.service.UserService;
+import com.system.slam.web.dto.LoginRequest;
+import com.system.slam.web.dto.LoginResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -48,4 +50,15 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+        try {
+            String token = userService.authenticateUser(loginRequest.getUsername(), loginRequest.getPassword());
+            return ResponseEntity.ok(new LoginResponse(token));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
 }
