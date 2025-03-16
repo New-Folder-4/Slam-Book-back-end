@@ -19,7 +19,7 @@ public class UserController {
     public ResponseEntity<String> getUserTest() {
         return ResponseEntity.ok("This is user test");
     }
-}
+
 
     private final UserService userService;
 
