@@ -1,12 +1,14 @@
 package com.system.slam.controller.list;
 
 import com.system.slam.entity.list.ExchangeList;
+import com.system.slam.entity.list.UserExchangeList;
 import com.system.slam.service.list.ExchangeListService;
 import com.system.slam.web.dto.ConfirmRequest;
 import com.system.slam.web.dto.ExchangeDto;
 import com.system.slam.web.dto.ExchangeMatchDto;
-import com.system.slam.service.MatchingService;
 import com.system.slam.web.dto.ProposeRequest;
+import com.system.slam.web.dto.TrackNumberRequest;
+import com.system.slam.service.MatchingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -51,13 +53,23 @@ public class ExchangeListController {
         return convertToDto(confirmed);
     }
 
-    private ExchangeDto convertToDto(ExchangeList exchange) {
+    @PostMapping("/track")
+    public ExchangeDto setTrackNumber(@RequestBody TrackNumberRequest dto) {
+        UserExchangeList updated = exchangeListService.setTrackNumber(
+                dto.getExchangeId(),
+                dto.getUserId(),
+                dto.getTrackNumber()
+        );
+        return convertToDto(updated.getExchangeList());
+    }
+
+    private ExchangeDto convertToDto(ExchangeList exch) {
         ExchangeDto dto = new ExchangeDto();
-        dto.setExchangeId(exchange.getIdExchangeList());
-        dto.setOfferId((exchange.getOfferList1() != null) ? exchange.getOfferList1().getIdOfferList() : null);
-        dto.setWishId((exchange.getWishList1() != null) ? exchange.getWishList1().getIdWishList() : null);
-        dto.setIsBoth(exchange.isBoth());
-        dto.setCreateAt(exchange.getCreateAt());
+        dto.setExchangeId(exch.getIdExchangeList());
+        dto.setOfferId((exch.getOfferList1() != null) ? exch.getOfferList1().getIdOfferList() : null);
+        dto.setWishId((exch.getWishList1() != null) ? exch.getWishList1().getIdWishList() : null);
+        dto.setIsBoth(exch.isBoth());
+        dto.setCreateAt(exch.getCreateAt());
         return dto;
     }
 
