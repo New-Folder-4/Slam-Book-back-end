@@ -131,6 +131,13 @@ public class UserService {
         return convertToUserProfileDto(user);
     }
 
+    public void blockUser(Long userId) {
+        User user = getUserById(userId);
+        user.setEnabled(false);
+        userRepository.save(user);
+    }
+
+
     public void deleteUser(Long userId) {
         userRepository.deleteById(userId);
     }
