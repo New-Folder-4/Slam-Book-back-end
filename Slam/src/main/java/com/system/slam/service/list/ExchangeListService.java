@@ -1,6 +1,7 @@
 package com.system.slam.service.list;
 
 import com.system.slam.entity.Status;
+import com.system.slam.entity.User;
 import com.system.slam.entity.list.ExchangeList;
 import com.system.slam.entity.list.OfferList;
 import com.system.slam.entity.list.UserExchangeList;
@@ -10,9 +11,12 @@ import com.system.slam.repository.list.ExchangeListRepository;
 import com.system.slam.repository.list.OfferListRepository;
 import com.system.slam.repository.list.UserExchangeListRepository;
 import com.system.slam.repository.list.WishListRepository;
+import com.system.slam.service.EmailService;
+import com.system.slam.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class ExchangeListService {
@@ -22,18 +26,24 @@ public class ExchangeListService {
     private final WishListRepository wishListRepository;
     private final UserExchangeListRepository userExchangeListRepository;
     private final StatusRepository statusRepository;
+    private final UserService userService;
+    private final EmailService emailService;
 
     @Autowired
     public ExchangeListService(ExchangeListRepository exchangeListRepository,
                                OfferListRepository offerListRepository,
                                WishListRepository wishListRepository,
                                UserExchangeListRepository userExchangeListRepository,
-                               StatusRepository statusRepository) {
+                               StatusRepository statusRepository,
+                               UserService userService,
+                               EmailService emailService) {
         this.exchangeListRepository = exchangeListRepository;
         this.offerListRepository = offerListRepository;
         this.wishListRepository = wishListRepository;
         this.userExchangeListRepository = userExchangeListRepository;
         this.statusRepository = statusRepository;
+        this.userService = userService;
+        this.emailService = emailService;
     }
 
     public ExchangeList proposeExchange(Long offerId, Long wishId) {
@@ -169,6 +179,53 @@ public class ExchangeListService {
         UserExchangeList uex = getUserExchangeList(exchangeId, userId);
         return (uex != null) ? uex.getTrackNumber() : null;
     }
+
+    public List<UserExchangeList> findOverdueExchangesWithoutTrack(int daysLimit) {
+        LocalDateTime cutoff = LocalDateTime.now().minusDays(daysLimit);
+
+        return userExchangeListRepository.findAll().stream()
+                .filter(ue -> ue.getTrackNumber() == null)
+                .filter(ue -> {
+                    ExchangeList exch = ue.getExchangeList();
+                    return exch.isBoth()
+                            && exch.getCreateAt().isBefore(cutoff);
+                })
+                .toList();
+    }
+
+    public void sendReminderToUser(UserExchangeList uex) {
+        User user = uex.getOfferList().getUser();
+        if (user == null) {
+            System.out.println("No user in offerList");
+            return;
+        }
+        String email = user.getEmail();
+        if (email == null || email.isEmpty()) {
+            System.out.println("User has no email, userId=" + user.getIdUser());
+            return;
+        }
+
+        String subject = "Напоминание о вводе трек-номера";
+        String text = "Уважаемый(ая) " + user.getFirstName()
+                + ",\n\n"
+                + "У вас есть обмен № " + uex.getExchangeList().getIdExchangeList()
+                + ", для которого вы не ввели трек-номер. "
+                + "Пожалуйста, зайдите в личный кабинет и укажите его.\n\n"
+                + "С уважением, Администрация BookChanger";
+
+        emailService.sendEmail(email, subject, text);
+
+        System.out.println("SEND REMINDER: userId=" + user.getIdUser()
+                + ", email=" + email
+                + ", exchangeId=" + uex.getExchangeList().getIdExchangeList());
+    }
+
+    public void blockParticipant(UserExchangeList uex) {
+        Long userId = uex.getOfferList().getUser().getIdUser();
+        userService.blockUser(userId);
+        System.out.println("User " + userId + " blocked due to no trackNumber in time.");
+    }
+
 
 }
 
