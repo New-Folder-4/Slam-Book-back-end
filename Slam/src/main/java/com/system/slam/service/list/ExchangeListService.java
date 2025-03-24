@@ -152,6 +152,8 @@ public class ExchangeListService {
         userOffer.setUpdateAt(LocalDateTime.now());
         offerListRepository.save(userOffer);
 
+        notifyOtherParticipantWithTrack(exchange, userOffer, trackNumber);
+
         return uex;
     }
 
@@ -161,7 +163,8 @@ public class ExchangeListService {
         OfferList userOffer;
         if (exchange.getOfferList1().getUser().getIdUser().equals(userId)) {
             userOffer = exchange.getOfferList1();
-        } else if (exchange.getOfferList2() != null && exchange.getOfferList2().getUser().getIdUser().equals(userId)) {
+        } else if (exchange.getOfferList2() != null
+                && exchange.getOfferList2().getUser().getIdUser().equals(userId)) {
             userOffer = exchange.getOfferList2();
         } else {
             userOffer = null;
@@ -210,8 +213,8 @@ public class ExchangeListService {
                 + ",\n\n"
                 + "У вас есть обмен № " + uex.getExchangeList().getIdExchangeList()
                 + ", для которого вы не ввели трек-номер. "
-                + "Пожалуйста, зайдите в личный кабинет и укажите его.\n\n"
-                + "С уважением, Администрация BookChanger";
+                + "Пожалуйста, в личном кабинете укажите его.\n\n"
+                + "С уважением, Администрация Book-changer";
 
         emailService.sendEmail(email, subject, text);
 
@@ -223,7 +226,60 @@ public class ExchangeListService {
     public void blockParticipant(UserExchangeList uex) {
         Long userId = uex.getOfferList().getUser().getIdUser();
         userService.blockUser(userId);
-        System.out.println("User " + userId + " blocked due to no trackNumber in time.");
+        System.out.println("Пользователь " + userId
+                + " заблокирован из-за отсутствия номера трека во времени.");
+    }
+
+    private OfferList findOfferBelongsToUser(ExchangeList exchange, Long userId) {
+        if (exchange.getOfferList1() != null
+                && exchange.getOfferList1().getUser().getIdUser().equals(userId)) {
+            return exchange.getOfferList1();
+        } else if (exchange.getOfferList2() != null
+                && exchange.getOfferList2().getUser().getIdUser().equals(userId)) {
+            return exchange.getOfferList2();
+        }
+        return null;
+    }
+
+    private void successShipmentNotify(Long userId, Long exchangeId) {
+        System.out.println("Участник обмена " + userId
+                + " ввёл трек-номер для обмена." + exchangeId);
+    }
+
+    private void notifyOtherParticipantWithTrack(ExchangeList exchange,
+                                                 OfferList userOffer, String trackNumber) {
+        OfferList otherOffer = (userOffer == exchange.getOfferList1())
+                ? exchange.getOfferList2()
+                : exchange.getOfferList1();
+        if (otherOffer == null || otherOffer.getUser() == null) {
+            return;
+        }
+        User otherUser = otherOffer.getUser();
+        if (otherUser.getEmail() == null || otherUser.getEmail().isEmpty()) {
+            return;
+        }
+        String email = otherUser.getEmail();
+        String subject = "Участник обмена указал трек-номер";
+        String text = "Вам отправили трек: " + trackNumber
+                + ", обмен №" + exchange.getIdExchangeList();
+        emailService.sendEmail(email, subject, text);
+    }
+
+    private void sendInAppNotificationForOtherParticipant(ExchangeList exchange,
+                                                          OfferList userOffer,
+                                                          String trackNumber) {
+        OfferList otherOffer = (userOffer == exchange.getOfferList1())
+                ? exchange.getOfferList2()
+                : exchange.getOfferList1();
+        if (otherOffer != null && otherOffer.getUser() != null) {
+            System.out.println("In-app notify -> userId=" + otherOffer.getUser().getIdUser()
+                    + ": участник обмена указал трек-номер=" + trackNumber);
+        }
+    }
+
+    public void reportToAdmin(Long exchangeId, Long userId, String message) {
+        System.out.println("REPORT TO ADMIN: user=" + userId + ", exchange="
+                + exchangeId + ", text=" + message);
     }
 
 
