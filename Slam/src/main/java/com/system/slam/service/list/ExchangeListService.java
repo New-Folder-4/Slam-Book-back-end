@@ -152,9 +152,7 @@ public class ExchangeListService {
         userOffer.setUpdateAt(LocalDateTime.now());
         offerListRepository.save(userOffer);
 
-        successShipmentNotify(userId, exchangeId);
         notifyOtherParticipantWithTrack(exchange, userOffer, trackNumber);
-        sendInAppNotificationForOtherParticipant(exchange, userOffer, trackNumber);
 
         return uex;
     }
