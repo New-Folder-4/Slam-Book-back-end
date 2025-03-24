@@ -36,7 +36,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/LoginResponse'
-  /auth/staff:
+  /auth/register/staff:
     post:
       summary: Регистрация персонала
       requestBody:
@@ -49,7 +49,7 @@ paths:
       responses:
         '200':
           description: Персонал успешно зарегистрирован
-  /auth/admin:
+  /auth/register/admin:
     post:
       summary: Регистрация администратора
       requestBody:

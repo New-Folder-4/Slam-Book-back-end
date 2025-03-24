@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class WishListService {
@@ -83,5 +84,17 @@ public class WishListService {
             wishListRepository.save(wish);
         }
     }
+
+    public List<WishList> getAllByUserId(Long userId) {
+        return wishListRepository.findAll().stream()
+                .filter(wish -> wish.getUser().getIdUser().equals(userId))
+                .collect(Collectors.toList());
+    }
+
+
+    public List<Long> getCategoryIdsForWish(Long idWishList) {
+        return userListService.getCategoryIdsForList(idWishList, 2);
+    }
+
 }
 
