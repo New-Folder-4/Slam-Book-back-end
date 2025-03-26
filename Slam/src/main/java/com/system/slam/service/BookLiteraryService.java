@@ -5,6 +5,7 @@ import com.system.slam.entity.BookLiterary;
 import com.system.slam.repository.BookLiteraryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,7 +22,9 @@ public class BookLiteraryService {
         this.authorService = authorService;
     }
 
-    public BookLiterary createBookLiterary(Long authorId, String bookName, String note) {
+    public BookLiterary createBookLiterary(Long authorId,
+                                           String bookName,
+                                           String note) {
 
         Author author = authorService.getAuthor(authorId);
 
@@ -38,7 +41,9 @@ public class BookLiteraryService {
                 .orElseThrow(() -> new RuntimeException("BookLiterary not found, id=" + bookId));
     }
 
-    public BookLiterary updateBookLiterary(Long bookId, String newBookName, String newNote) {
+    public BookLiterary updateBookLiterary(Long bookId,
+                                           String newBookName,
+                                           String newNote) {
         BookLiterary book = getBookLiterary(bookId);
         book.setBookName(newBookName);
         book.setNote(newNote);

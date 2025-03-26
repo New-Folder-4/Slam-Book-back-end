@@ -8,6 +8,7 @@ import com.system.slam.repository.UserValueCategoryRepository;
 import com.system.slam.repository.list.UserListRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,7 +28,9 @@ public class UserListService {
         this.categoryRepository = categoryRepository;
     }
 
-    public void addCategoriesToList(Long idList, int typeList, List<Long> categoryIds) {
+    public void addCategoriesToList(Long idList,
+                                    int typeList,
+                                    List<Long> categoryIds) {
         UserList userList = new UserList();
         userList.setTypeList(typeList);
         userList.setIdList(idList);
@@ -46,7 +49,9 @@ public class UserListService {
         }
     }
 
-    public void updateCategoriesForList(Long idList, int typeList, List<Long> newCategoryIds) {
+    public void updateCategoriesForList(Long idList,
+                                        int typeList,
+                                        List<Long> newCategoryIds) {
         List<UserList> userLists = userListRepository.findAllByIdListAndTypeList(idList, typeList);
 
         for (UserList ul : userLists) {

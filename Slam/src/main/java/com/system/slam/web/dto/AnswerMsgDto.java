@@ -7,7 +7,8 @@ public class AnswerMsgDto {
     public AnswerMsgDto() {
     }
 
-    public AnswerMsgDto(Long messageId, String text) {
+    public AnswerMsgDto(Long messageId,
+                        String text) {
         this.messageId = messageId;
         this.text = text;
     }

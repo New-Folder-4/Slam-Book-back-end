@@ -21,8 +21,6 @@ public class JwtTokenProvider {
     @Value("${app.jwt.expiration}")
     private int jwtExpirationInMs;
 
-
-
     public String generateToken(String username, Collection<? extends GrantedAuthority> authorities) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtExpirationInMs);

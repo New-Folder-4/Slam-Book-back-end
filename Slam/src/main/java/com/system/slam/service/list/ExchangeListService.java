@@ -15,6 +15,7 @@ import com.system.slam.service.EmailService;
 import com.system.slam.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -47,15 +48,15 @@ public class ExchangeListService {
     }
 
     public ExchangeList proposeExchange(Long offerId, Long wishId) {
-        OfferList offer = offerListRepository.findById(offerId)
+        OfferList offer1 = offerListRepository.findById(offerId)
                 .orElseThrow(() -> new RuntimeException("Offer not found: " + offerId));
 
-        WishList wish = wishListRepository.findById(wishId)
+        WishList wish1 = wishListRepository.findById(wishId)
                 .orElseThrow(() -> new RuntimeException("Wish not found: " + wishId));
 
         ExchangeList exchange = new ExchangeList();
-        exchange.setOfferList1(offer);
-        exchange.setWishList1(wish);
+        exchange.setOfferList1(offer1);
+        exchange.setWishList1(wish1);
         exchange.setOfferList2(null);
         exchange.setWishList2(null);
         exchange.setCreateAt(LocalDateTime.now());
@@ -66,18 +67,20 @@ public class ExchangeListService {
         Status reservedStatus = statusRepository.findByName("reserved")
                 .orElseThrow(() -> new RuntimeException("Status 'reserved' not found"));
 
-        offer.setStatus(reservedStatus);
-        offer.setUpdateAt(LocalDateTime.now());
-        offerListRepository.save(offer);
+        offer1.setStatus(reservedStatus);
+        offer1.setUpdateAt(LocalDateTime.now());
+        offerListRepository.save(offer1);
 
-        wish.setStatus(reservedStatus);
-        wish.setUpdateAt(LocalDateTime.now());
-        wishListRepository.save(wish);
+        wish1.setStatus(reservedStatus);
+        wish1.setUpdateAt(LocalDateTime.now());
+        wishListRepository.save(wish1);
 
         return exchange;
     }
 
-    public ExchangeList confirmExchange(Long exchangeId, Long secondOfferId, Long secondWishId) {
+    public ExchangeList confirmExchange(Long exchangeId,
+                                        Long secondOfferId,
+                                        Long secondWishId) {
         ExchangeList exchange = exchangeListRepository.findById(exchangeId)
                 .orElseThrow(() -> new RuntimeException("Exchange not found: " + exchangeId));
 
@@ -105,6 +108,7 @@ public class ExchangeListService {
 
         createUserExchangeListRecord(exchange, exchange.getOfferList1());
         createUserExchangeListRecord(exchange, exchange.getOfferList2());
+
         return exchange;
     }
 
@@ -117,11 +121,13 @@ public class ExchangeListService {
         userExchangeListRepository.save(uex);
     }
 
-    public UserExchangeList setTrackNumber(Long exchangeId, Long userId, String trackNumber) {
+    public UserExchangeList setTrackNumber(Long exchangeId,
+                                           Long userId,
+                                           String trackNumber) {
         ExchangeList exchange = exchangeListRepository.findById(exchangeId)
                 .orElseThrow(() -> new RuntimeException("Exchange not found: " + exchangeId));
 
-        OfferList userOffer;
+        OfferList userOffer; // -
         if (exchange.getOfferList1() != null &&
                 exchange.getOfferList1().getUser().getIdUser().equals(userId)) {
             userOffer = exchange.getOfferList1();
@@ -155,13 +161,25 @@ public class ExchangeListService {
         return uex;
     }
 
+    public String getTrackNumber(Long exchangeId, Long userId) {
+        if (exchangeId != null && userId != null) {
+            UserExchangeList uex = getUserExchangeList(exchangeId, userId);
+            return (uex != null
+                    && uex.getTrackNumber() != null
+                    && !uex.getTrackNumber().isEmpty())
+                    ? uex.getTrackNumber() : "";
+        }
+        return "";
+    }
+
     public UserExchangeList getUserExchangeList(Long exchangeId, Long userId) {
         ExchangeList exchange = exchangeListRepository.findById(exchangeId)
                 .orElseThrow(() -> new RuntimeException("Exchange not found: " + exchangeId));
         OfferList userOffer;
         if (exchange.getOfferList1().getUser().getIdUser().equals(userId)) {
             userOffer = exchange.getOfferList1();
-        } else if (exchange.getOfferList2() != null && exchange.getOfferList2().getUser().getIdUser().equals(userId)) {
+        } else if (exchange.getOfferList2() != null
+                && exchange.getOfferList2().getUser().getIdUser().equals(userId)) {
             userOffer = exchange.getOfferList2();
         } else {
             userOffer = null;
@@ -174,10 +192,6 @@ public class ExchangeListService {
                 .filter(ue -> ue.getOfferList().getIdOfferList().equals(userOffer.getIdOfferList()))
                 .findFirst()
                 .orElse(null);
-    }
-    public String getTrackNumber(Long exchangeId, Long userId) {
-        UserExchangeList uex = getUserExchangeList(exchangeId, userId);
-        return (uex != null) ? uex.getTrackNumber() : null;
     }
 
     public List<UserExchangeList> findOverdueExchangesWithoutTrack(int daysLimit) {
@@ -224,6 +238,63 @@ public class ExchangeListService {
         Long userId = uex.getOfferList().getUser().getIdUser();
         userService.blockUser(userId);
         System.out.println("User " + userId + " blocked due to no trackNumber in time.");
+    }
+
+    public ExchangeList receiveBook(Long exchangeId, Long userId) {
+        ExchangeList exchange = exchangeListRepository.findById(exchangeId)
+                .orElseThrow(() -> new RuntimeException("Exchange not found: " + exchangeId));
+
+        OfferList userOffer = findOfferBelongsToUser(exchange, userId);
+        if (userOffer == null) {
+            throw new RuntimeException("User is not a participant in this exchange.");
+        }
+
+        UserExchangeList uex = userExchangeListRepository.findAll().stream()
+                .filter(ue -> ue.getExchangeList().getIdExchangeList().equals(exchangeId))
+                .filter(ue -> ue.getOfferList().getIdOfferList().equals(userOffer.getIdOfferList()))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("UserExchangeList record not found"));
+
+        uex.setReceiving(true);
+        userExchangeListRepository.save(uex);
+
+        if (bothUsersReceived(exchangeId)) {
+            completeExchange(exchange);
+        }
+        return exchange;
+    }
+
+    private boolean bothUsersReceived(Long exchangeId) {
+        List<UserExchangeList> all = userExchangeListRepository.findAll().stream()
+                .filter(ue -> ue.getExchangeList().getIdExchangeList().equals(exchangeId))
+                .toList();
+        return all.size() == 2 && all.stream().allMatch(UserExchangeList::isReceiving);
+    }
+
+    private void completeExchange(ExchangeList exchange) {
+        Status completed = statusRepository.findByName("completed")
+                .orElseThrow(() -> new RuntimeException("Status 'completed' not found"));
+
+        if (exchange.getOfferList1() != null) {
+            exchange.getOfferList1().setStatus(completed);
+            offerListRepository.save(exchange.getOfferList1());
+        }
+        if (exchange.getOfferList2() != null) {
+            exchange.getOfferList2().setStatus(completed);
+            offerListRepository.save(exchange.getOfferList2());
+        }
+        exchangeListRepository.save(exchange);
+    }
+
+    private OfferList findOfferBelongsToUser(ExchangeList exchange, Long userId) {
+        if (exchange.getOfferList1() != null
+                && exchange.getOfferList1().getUser().getIdUser().equals(userId)) {
+            return exchange.getOfferList1();
+        } else if (exchange.getOfferList2() != null
+                && exchange.getOfferList2().getUser().getIdUser().equals(userId)) {
+            return exchange.getOfferList2();
+        }
+        return null;
     }
 
 

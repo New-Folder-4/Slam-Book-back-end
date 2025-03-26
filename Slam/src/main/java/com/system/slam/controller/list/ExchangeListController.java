@@ -3,11 +3,7 @@ package com.system.slam.controller.list;
 import com.system.slam.entity.list.ExchangeList;
 import com.system.slam.entity.list.UserExchangeList;
 import com.system.slam.service.list.ExchangeListService;
-import com.system.slam.web.dto.ConfirmRequest;
-import com.system.slam.web.dto.ExchangeDto;
-import com.system.slam.web.dto.ExchangeMatchDto;
-import com.system.slam.web.dto.ProposeRequest;
-import com.system.slam.web.dto.TrackNumberRequest;
+import com.system.slam.web.dto.*;
 import com.system.slam.service.MatchingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -61,6 +57,12 @@ public class ExchangeListController {
                 dto.getTrackNumber()
         );
         return convertToDto(updated.getExchangeList());
+    }
+
+    @PostMapping("/receive")
+    public ExchangeDto receiveBook(@RequestBody ReceiveRequest req) {
+        ExchangeList exch = exchangeListService.receiveBook(req.getExchangeId(), req.getUserId());
+        return convertToDto(exch);
     }
 
     private ExchangeDto convertToDto(ExchangeList exch) {
