@@ -5,6 +5,7 @@ import com.system.slam.entity.Author;
 import com.system.slam.repository.AuthorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -41,7 +42,9 @@ public class AuthorService {
         return convertToDto(author);
     }
 
-    public Author updateAuthor(Long authorId, String newFirstName, String newLastName) {
+    public Author updateAuthor(Long authorId,
+                               String newFirstName,
+                               String newLastName) {
         Author author = getAuthor(authorId);
         author.setFirstName(newFirstName);
         author.setLastName(newLastName);
@@ -69,7 +72,10 @@ public class AuthorService {
     }
 
     private AuthorDto convertToDto(Author author) {
-        return new AuthorDto(author.getIdAuthor(), author.getFirstName(), author.getLastName());
+        return new AuthorDto(
+                author.getIdAuthor(),
+                author.getFirstName(),
+                author.getLastName());
     }
 }
 

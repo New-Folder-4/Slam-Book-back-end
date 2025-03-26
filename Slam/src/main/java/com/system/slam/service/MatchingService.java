@@ -9,6 +9,7 @@ import com.system.slam.web.dto.ExchangeMatchDto;
 import com.system.slam.web.dto.OfferDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -66,14 +67,12 @@ public class MatchingService {
         return result;
     }
 
-    // Заглушка
     private List<WishList> getUserFreeWishes(Long userId) {
         return wishListRepository.findAll().stream()
                 .filter(wish -> wish.getUser().getIdUser().equals(userId))
                 .toList();
     }
 
-    // Заглушка
     private List<OfferList> getFreeOffersExceptUser(Long userId) {
         return offerListRepository.findAll().stream()
                 .filter(offer -> !offer.getUser().getIdUser().equals(userId))

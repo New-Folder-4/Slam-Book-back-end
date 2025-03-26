@@ -3,6 +3,7 @@ package com.system.slam.scheduler;
 import com.system.slam.entity.list.UserExchangeList;
 import com.system.slam.repository.list.UserExchangeListRepository;
 import com.system.slam.service.list.ExchangeListService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -18,6 +19,7 @@ public class TrackNumberScheduler {
     private final ExchangeListService exchangeListService;
     private final UserExchangeListRepository userExchangeListRepository;
 
+    @Autowired
     public TrackNumberScheduler(ExchangeListService exchangeListService,
                                 UserExchangeListRepository userExchangeListRepository) {
         this.exchangeListService = exchangeListService;

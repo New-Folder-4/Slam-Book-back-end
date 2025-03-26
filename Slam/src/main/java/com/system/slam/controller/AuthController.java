@@ -25,7 +25,6 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody User user) {
-        // ? - чтобы можно было вернуть как User так и String для ошибки
         try {
             User registeredUser = userService.registerUser(user, false, false);
             return ResponseEntity.ok(registeredUser);

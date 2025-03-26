@@ -8,6 +8,7 @@ import com.system.slam.repository.StatusRepository;
 import com.system.slam.repository.list.WishListRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,7 +29,10 @@ public class WishListService {
         this.userListService = userListService;
     }
 
-    public WishList createWish(Long userId, Long addressId, String initialStatus, List<Long> categoryIds) {
+    public WishList createWish(Long userId,
+                               Long addressId,
+                               String initialStatus,
+                               List<Long> categoryIds) {
         WishList wish = new WishList();
         wish.setUser(new User(userId));
         wish.setUserAddress(new UserAddress(addressId));
@@ -46,7 +50,10 @@ public class WishListService {
         return savedWish;
     }
 
-    public WishList updateWish(Long wishId, Long newAddressId, String newStatusName, List<Long> newCategoryIds) {
+    public WishList updateWish(Long wishId,
+                               Long newAddressId,
+                               String newStatusName,
+                               List<Long> newCategoryIds) {
         WishList wish = wishListRepository.findById(wishId)
                 .orElseThrow(() -> new RuntimeException("WishList not found, id=" + wishId));
 
