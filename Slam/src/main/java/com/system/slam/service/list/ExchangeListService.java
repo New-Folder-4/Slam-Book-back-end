@@ -243,17 +243,6 @@ public class ExchangeListService {
                 + " заблокирован из-за отсутствия номера трека во времени.");
     }
 
-    private OfferList findOfferBelongsToUser(ExchangeList exchange, Long userId) {
-        if (exchange.getOfferList1() != null
-                && exchange.getOfferList1().getUser().getIdUser().equals(userId)) {
-            return exchange.getOfferList1();
-        } else if (exchange.getOfferList2() != null
-                && exchange.getOfferList2().getUser().getIdUser().equals(userId)) {
-            return exchange.getOfferList2();
-        }
-        return null;
-    }
-
     private void successShipmentNotify(Long userId, Long exchangeId) {
         System.out.println("Участник обмена " + userId
                 + " ввёл трек-номер для обмена." + exchangeId);
