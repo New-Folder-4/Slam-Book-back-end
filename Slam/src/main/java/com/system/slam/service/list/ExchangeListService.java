@@ -386,17 +386,6 @@ public class ExchangeListService {
         exchangeListRepository.save(exchange);
     }
 
-    private OfferList findOfferBelongsToUser(ExchangeList exchange, Long userId) {
-        if (exchange.getOfferList1() != null
-                && exchange.getOfferList1().getUser().getIdUser().equals(userId)) {
-            return exchange.getOfferList1();
-        } else if (exchange.getOfferList2() != null
-                && exchange.getOfferList2().getUser().getIdUser().equals(userId)) {
-            return exchange.getOfferList2();
-        }
-        return null;
-    }
-
     private void checkOfferNotInAnotherExchange(OfferList offer) {
         if (offer.getStatus() != null) {
             String stName = offer.getStatus().getName();
