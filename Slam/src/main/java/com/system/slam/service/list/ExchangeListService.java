@@ -236,6 +236,27 @@ public class ExchangeListService {
                 + ", exchangeId=" + uex.getExchangeList().getIdExchangeList());
     }
 
+    private void notifyOtherUserReceive(ExchangeList exchange, OfferList userOffer) {
+        OfferList otherOffer = (userOffer == exchange.getOfferList1())
+                ? exchange.getOfferList2()
+                : exchange.getOfferList1();
+        if (otherOffer == null || otherOffer.getUser() == null) {
+            return;
+        }
+        User otherUser = otherOffer.getUser();
+        if (otherUser.getEmail() != null && !otherUser.getEmail().isEmpty()) {
+            String subject = "Участник обмена подтвердил получение книги";
+            String text = "Обмен № " + exchange.getIdExchangeList()
+                    + ": участник обмена (userId=" + userOffer.getUser().getIdUser()
+                    + ") подтвердил, что книга получена.\n\n"
+                    + "Можете убедиться в личном кабинете!";
+            emailService.sendEmail(otherUser.getEmail(), subject, text);
+        }
+        System.out.println("NOTIFY -> userId=" + otherUser.getIdUser()
+                + ": участник обмена подтвердил получение книги в обмене "
+                + exchange.getIdExchangeList());
+    }
+
     public void blockParticipant(UserExchangeList uex) {
         Long userId = uex.getOfferList().getUser().getIdUser();
         userService.blockUser(userId);
@@ -284,30 +305,6 @@ public class ExchangeListService {
                 + exchangeId + ", text=" + message);
     }
 
-    public ExchangeList receiveBook(Long exchangeId, Long userId) {
-        ExchangeList exchange = exchangeListRepository.findById(exchangeId)
-                .orElseThrow(() -> new RuntimeException("Exchange not found: " + exchangeId));
-
-        OfferList userOffer = findOfferBelongsToUser(exchange, userId);
-        if (userOffer == null) {
-            throw new RuntimeException("User is not a participant in this exchange.");
-        }
-
-        UserExchangeList uex = userExchangeListRepository.findAll().stream()
-                .filter(ue -> ue.getExchangeList().getIdExchangeList().equals(exchangeId))
-                .filter(ue -> ue.getOfferList().getIdOfferList().equals(userOffer.getIdOfferList()))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("UserExchangeList record not found"));
-
-        uex.setReceiving(true);
-        userExchangeListRepository.save(uex);
-
-        if (bothUsersReceived(exchangeId)) {
-            completeExchange(exchange);
-        }
-        return exchange;
-    }
-
     private boolean bothUsersReceived(Long exchangeId) {
         List<UserExchangeList> all = userExchangeListRepository.findAll().stream()
                 .filter(ue -> ue.getExchangeList().getIdExchangeList().equals(exchangeId))
@@ -339,6 +336,45 @@ public class ExchangeListService {
             return exchange.getOfferList2();
         }
         return null;
+    }
+
+    public ExchangeList receiveBook(Long exchangeId, Long userId) {
+        ExchangeList exchange = exchangeListRepository.findById(exchangeId)
+                .orElseThrow(() -> new RuntimeException("Exchange not found: " + exchangeId));
+
+        OfferList userOffer = findOfferBelongsToUser(exchange, userId);
+        if (userOffer == null) {
+            throw new RuntimeException("User is not a participant in this exchange.");
+        }
+
+        UserExchangeList uex = userExchangeListRepository.findAll().stream()
+                .filter(ue -> ue.getExchangeList().getIdExchangeList().equals(exchangeId))
+                .filter(ue -> ue.getOfferList().getIdOfferList().equals(userOffer.getIdOfferList()))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("UserExchangeList not found"));
+
+        uex.setReceiving(true);
+        userExchangeListRepository.save(uex);
+        notifyOtherUserReceive(exchange, userOffer);
+
+        if (bothUsersReceived(exchangeId)) {
+            completeExchangeNoRating(exchange);
+        }
+        return exchange;
+    }
+
+    private void completeExchangeNoRating(ExchangeList exchange) {
+        Status completed = statusRepository.findByName("completed")
+                .orElseThrow(() -> new RuntimeException("Status 'completed' not found"));
+        if (exchange.getOfferList1() != null) {
+            exchange.getOfferList1().setStatus(completed);
+            offerListRepository.save(exchange.getOfferList1());
+        }
+        if (exchange.getOfferList2() != null) {
+            exchange.getOfferList2().setStatus(completed);
+            offerListRepository.save(exchange.getOfferList2());
+        }
+        exchangeListRepository.save(exchange);
     }
 
 
