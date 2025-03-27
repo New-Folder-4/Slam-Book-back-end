@@ -50,9 +50,11 @@ public class ExchangeListService {
     public ExchangeList proposeExchange(Long offerId, Long wishId) {
         OfferList offer1 = offerListRepository.findById(offerId)
                 .orElseThrow(() -> new RuntimeException("Offer not found: " + offerId));
+        checkOfferNotInAnotherExchange(offer1);
 
         WishList wish1 = wishListRepository.findById(wishId)
                 .orElseThrow(() -> new RuntimeException("Wish not found: " + wishId));
+        checkWishNotInAnotherExchange(wish1);
 
         ExchangeList exchange = new ExchangeList();
         exchange.setOfferList1(offer1);
@@ -84,10 +86,17 @@ public class ExchangeListService {
         ExchangeList exchange = exchangeListRepository.findById(exchangeId)
                 .orElseThrow(() -> new RuntimeException("Exchange not found: " + exchangeId));
 
+        if (exchange.isBoth()) {
+            throw new RuntimeException("Обмен уже подтвержден или принадлежит другому пользователю");
+        }
+
         OfferList offer2 = offerListRepository.findById(secondOfferId)
                 .orElseThrow(() -> new RuntimeException("Offer2 not found: " + secondOfferId));
+        checkOfferNotInAnotherExchange(offer2);
+
         WishList wish2 = wishListRepository.findById(secondWishId)
                 .orElseThrow(() -> new RuntimeException("Wish2 not found: " + secondWishId));
+        checkWishNotInAnotherExchange(wish2);
 
         exchange.setOfferList2(offer2);
         exchange.setWishList2(wish2);
@@ -375,6 +384,37 @@ public class ExchangeListService {
             offerListRepository.save(exchange.getOfferList2());
         }
         exchangeListRepository.save(exchange);
+    }
+
+    private OfferList findOfferBelongsToUser(ExchangeList exchange, Long userId) {
+        if (exchange.getOfferList1() != null
+                && exchange.getOfferList1().getUser().getIdUser().equals(userId)) {
+            return exchange.getOfferList1();
+        } else if (exchange.getOfferList2() != null
+                && exchange.getOfferList2().getUser().getIdUser().equals(userId)) {
+            return exchange.getOfferList2();
+        }
+        return null;
+    }
+
+    private void checkOfferNotInAnotherExchange(OfferList offer) {
+        if (offer.getStatus() != null) {
+            String stName = offer.getStatus().getName();
+            if ("reserved".equalsIgnoreCase(stName) || "confirmed".equalsIgnoreCase(stName)) {
+                throw new RuntimeException(
+                        "Книга (Offer) уже участвует в другом обмене! id=" + offer.getIdOfferList());
+            }
+        }
+    }
+
+    private void checkWishNotInAnotherExchange(WishList wish) {
+        if (wish.getStatus() != null) {
+            String stName = wish.getStatus().getName();
+            if ("reserved".equalsIgnoreCase(stName) || "confirmed".equalsIgnoreCase(stName)) {
+                throw new RuntimeException(
+                        "Запрошенная книга (Wish) уже участвует в другом обмене! id=" + wish.getIdWishList());
+            }
+        }
     }
 
 
