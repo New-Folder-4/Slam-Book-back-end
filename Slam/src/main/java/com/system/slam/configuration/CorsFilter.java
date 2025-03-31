@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 
 @Component
-public class SimpleCorsFilter implements Filter {
+public class CorsFilter implements Filter {
 
     @Value("${app.frontend.url}")
     private String frontendUrl;
