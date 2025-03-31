@@ -53,6 +53,8 @@ public class UserService {
         user.setStaff(isStaff);
         user.setSuperUser(isSuperUser);
         user.setCreateAt(LocalDateTime.now());
+        user.setEnabled(true);
+        user.setRating(0);
 
         return userRepository.save(user);
     }
