@@ -10,7 +10,7 @@ public class ExchangeList {
 
     @Id
     @Column(name = "IdExchangeList", nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long idExchangeList;
 
     @ManyToOne

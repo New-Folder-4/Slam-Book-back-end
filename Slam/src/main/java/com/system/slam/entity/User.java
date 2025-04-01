@@ -11,7 +11,7 @@ public class User {
 
     @Id
     @Column(name = "IdUser", nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long idUser;
 
     @Column(name = "FirstName", length = 25, nullable = false)

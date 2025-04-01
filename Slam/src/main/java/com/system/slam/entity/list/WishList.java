@@ -13,7 +13,7 @@ public class WishList {
 
     @Id
     @Column(name = "IdWishList", nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long idWishList;
 
     @ManyToOne

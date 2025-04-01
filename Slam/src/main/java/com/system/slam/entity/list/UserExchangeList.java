@@ -9,7 +9,7 @@ public class UserExchangeList {
 
     @Id
     @Column(name = "IdUserExchangeList", nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long idUserExchangeList;
 
     @ManyToOne

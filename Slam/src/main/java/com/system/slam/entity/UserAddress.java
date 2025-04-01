@@ -9,7 +9,7 @@ public class UserAddress {
 
     @Id
     @Column(name = "IdUserAddress", nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long idUserAddress;
 
     @ManyToOne

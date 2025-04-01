@@ -9,7 +9,7 @@ public class UserList {
 
     @Id
     @Column(name = "IdUserList", nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long idUserList;
 
     @Column(name = "TypeList", nullable = false)

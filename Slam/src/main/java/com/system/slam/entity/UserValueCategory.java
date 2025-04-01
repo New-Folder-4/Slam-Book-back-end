@@ -10,7 +10,7 @@ public class UserValueCategory {
 
     @Id
     @Column(name = "IdUserValueCategory", nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long idUserValueCategory;
 
     @ManyToOne

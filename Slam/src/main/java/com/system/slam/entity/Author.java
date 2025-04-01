@@ -9,7 +9,7 @@ public class Author {
 
     @Id
     @Column(name = "idAuthor", nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long idAuthor;
 
     @Column(name = "LastName", length = 20, nullable = false)

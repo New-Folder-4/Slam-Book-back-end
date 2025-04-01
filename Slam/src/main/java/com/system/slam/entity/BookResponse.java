@@ -10,7 +10,7 @@ public class BookResponse {
 
     @Id
     @Column(name = "IdBookResponse", nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long idBookResponse;
 
     @ManyToOne

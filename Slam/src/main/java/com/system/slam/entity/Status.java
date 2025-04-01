@@ -9,7 +9,7 @@ public class Status {
 
     @Id
     @Column(name = "IdStatus", nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long idStatus;
 
     @Column(name = "Name", length = 10)

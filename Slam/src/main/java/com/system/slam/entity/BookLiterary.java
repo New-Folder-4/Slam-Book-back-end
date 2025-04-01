@@ -9,7 +9,7 @@ public class BookLiterary {
 
     @Id
     @Column(name = "IdBookLiterary", nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long idBookLiterary;
 
     @ManyToOne
