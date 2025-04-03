@@ -68,6 +68,10 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/user/profile/**").authenticated()
+                        .requestMatchers("/avatars/upload").authenticated()
+                        .requestMatchers("/avatars/default").authenticated()
+                        .requestMatchers("/avatars/**").permitAll()
                         .requestMatchers("/user/**").permitAll()
                         .requestMatchers("/staff/**").permitAll()
                         .requestMatchers("/admin/**").permitAll()
