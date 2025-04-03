@@ -18,7 +18,7 @@ paths:
               $ref: '#/components/schemas/RegisterRequest'
       responses:
         '200':
-          description: Пользователь успешно зарегистрирован
+          description: Токен авторизации
   /auth/login:
     post:
       summary: Авторизация пользователя
@@ -62,10 +62,52 @@ paths:
       responses:
         '200':
           description: Администратор успешно зарегистрирован
-
+  /avatars/upload:
+    post:
+      summary: Смена аватарки на пользовательскую
+      requestBody:
+        description: Файл (.png, .jpeg, .jpg, .webp) и токен авторизации
+        required: true
+        content:
+          file:
+            schema:
+              $ref:
+      responses:
+        '200':
+          description: Смена аватарки пользователя
+  /avatars/default/{idDefaultAvatar}:
+    post:
+      summary: Смена аватарки на одну из дефолтных
+      requestBody:
+        description: Токен авторизации
+        required: true
+        content:
+            schema:
+              $ref:
+      responses:
+        '200':
+          description: Смена аватарки пользователя
+  /avatars/{userId}:
+    get:
+      summary: Возвращает аватарку пользователя
+      requestBody:
+        description:
+        required: true
+        content:
+            schema:
+              $ref:
+      responses:
+        '200':
+          description: Возвращает аватарку пользователя
   /user/profile:
     get:
       summary: Получить профиль пользователя
+      requestBody:
+        description: Токен авторизации
+        required: true
+        content:
+          schema:
+            $ref:
       responses:
         '200':
           description: Данные профиля

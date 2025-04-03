@@ -1,6 +1,7 @@
 package com.system.slam.entity;
 
 import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Objects;
@@ -51,7 +52,11 @@ public class User {
     @Column(name = "IsSuperUser", nullable = false)
     private boolean isSuperUser;
 
-    public User() {}
+    @Column(name = "AvatarPath", length = 255)
+    private String avatarPath;
+
+    public User() {
+    }
 
     public User(Long idUser,
                 String firstName,
@@ -189,31 +194,28 @@ public class User {
         isSuperUser = superUser;
     }
 
+    public String getAvatarPath() { return avatarPath; }
+
+    public void setAvatarPath(String avatarPath) { this.avatarPath = avatarPath; }
+    public String getAvatarUrl() {
+        if (avatarPath == null) {
+            return "/avatars/default/1"; // Аватар по умолчанию
+        }
+        return avatarPath.startsWith("default/")
+                ? "/avatars/" + avatarPath
+                : "/avatars/custom/" + avatarPath;
+    }
+
     @Override
-    public boolean equals(Object object) {
-        if (this == object) return true;
-        if (object == null || getClass() != object.getClass()) return false;
-        User user = (User) object;
-        return enabled == user.enabled &&
-                isStaff == user.isStaff &&
-                isSuperUser == user.isSuperUser &&
-                Objects.equals(idUser, user.idUser) &&
-                Objects.equals(firstName, user.firstName) &&
-                Objects.equals(lastName, user.lastName) &&
-                Objects.equals(secondName, user.secondName) &&
-                Objects.equals(email, user.email) &&
-                Objects.equals(userName, user.userName) &&
-                Objects.equals(password, user.password) &&
-                Objects.equals(rating, user.rating) &&
-                Objects.equals(createAt, user.createAt) &&
-                Arrays.equals(avatar, user.avatar);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User user)) return false;
+        return enabled == user.enabled && isStaff == user.isStaff && isSuperUser == user.isSuperUser && Objects.equals(idUser, user.idUser) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(secondName, user.secondName) && Objects.equals(email, user.email) && Objects.equals(userName, user.userName) && Objects.equals(password, user.password) && Objects.equals(rating, user.rating) && Objects.equals(createAt, user.createAt) && Arrays.equals(avatar, user.avatar) && Objects.equals(avatarPath, user.avatarPath);
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(idUser, firstName,
-                lastName, secondName, email, userName,
-                password, rating, createAt, enabled, isStaff, isSuperUser);
+        int result = Objects.hash(idUser, firstName, lastName, secondName, email, userName, password, rating, createAt, enabled, isStaff, isSuperUser, avatarPath);
         result = 31 * result + Arrays.hashCode(avatar);
         return result;
     }
@@ -234,6 +236,7 @@ public class User {
                 ", avatar=" + Arrays.toString(avatar) +
                 ", isStaff=" + isStaff +
                 ", isSuperUser=" + isSuperUser +
+                ", avatarPath='" + avatarPath + '\'' +
                 '}';
     }
 }

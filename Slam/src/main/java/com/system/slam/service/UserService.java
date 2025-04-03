@@ -2,6 +2,7 @@ package com.system.slam.service;
 
 import com.system.slam.entity.User;
 import com.system.slam.repository.UserRepository;
+import com.system.slam.web.dto.AuthResponseDto;
 import com.system.slam.web.security.JwtTokenProvider;
 import com.system.slam.web.dto.UserProfileDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.Optional;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -42,24 +44,31 @@ public class UserService {
     }
 
     public User getUserById(Long userId) {
-        return userRepository.findById(userId)
+        return userRepository.findByIdUser(userId)
                 .orElseThrow(() -> new RuntimeException("User not found, id=" + userId));
     }
 
-    public User registerUser(User user, boolean isStaff, boolean isSuperUser) {
+
+    public AuthResponseDto registerUser(User user, boolean isStaff, boolean isSuperUser)  {
         userValidationService.validateUserExists(user.getUserName(), user.getEmail());
 
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        String rawPassword = user.getPassword();
+
+        user.setPassword(passwordEncoder.encode(rawPassword));
         user.setStaff(isStaff);
         user.setSuperUser(isSuperUser);
         user.setCreateAt(LocalDateTime.now());
         user.setEnabled(true);
         user.setRating(0);
+        user.setAvatarPath("default/1");
 
-        return userRepository.save(user);
+        userRepository.save(user);
+
+        return authenticateUser(user.getUserName(), rawPassword);
+
     }
 
-    public String authenticateUser(String username, String password) {
+    public AuthResponseDto authenticateUser(String username, String password) {
         try {
             userValidationService.userIsNotExists(username);
 
@@ -71,7 +80,8 @@ public class UserService {
 
             Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
 
-            return jwtTokenProvider.generateToken(username, authorities);
+            String token = jwtTokenProvider.generateToken(username, authorities);
+            return new AuthResponseDto(token);
 
         } catch (BadCredentialsException e) {
             throw new RuntimeException("Invalid password");
@@ -79,6 +89,7 @@ public class UserService {
             throw e;
         }
     }
+
 
     public User createUser(User user) {
         user.setCreateAt(LocalDateTime.now());
@@ -125,12 +136,17 @@ public class UserService {
                 user.getIdUser(),
                 user.getFirstName(),
                 user.getLastName(),
+                user.getSecondName(),
                 user.getEmail(),
                 user.getUserName(),
-                user.getRating()
+                user.getRating(),
+                user.getAvatarUrl()
         );
     }
 
+    public void saveUser(User user) {
+        userRepository.save(user);
+    }
     public UserProfileDto getUserProfile(Long userId) {
         User user = getUserById(userId);
         return convertToUserProfileDto(user);
@@ -140,6 +156,16 @@ public class UserService {
         User user = getUserById(userId);
         user.setEnabled(false);
         userRepository.save(user);
+    }
+
+    public UserProfileDto findProfileByUsername(String username) {
+        User user = userRepository.findByUserName(username)
+                .orElseThrow(() -> new RuntimeException("User "+ username + " not found"));
+        return convertToUserProfileDto(user);
+    }
+
+    public Optional<User> findByUsername(String username) {
+        return userRepository.findByUserName(username);
     }
 
     public void deleteUser(Long userId) {

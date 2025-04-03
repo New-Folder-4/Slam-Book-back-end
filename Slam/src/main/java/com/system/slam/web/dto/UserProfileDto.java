@@ -4,25 +4,44 @@ public class UserProfileDto {
     private Long idUser;
     private String firstName;
     private String lastName;
+
+    private String secondName;
     private String email;
     private String userName;
     private Integer rating;
 
+    private String avatarUrl;
+
     public UserProfileDto() {
     }
 
-    public UserProfileDto(Long idUser,
-                          String firstName,
-                          String lastName,
-                          String email,
-                          String userName,
-                          Integer rating) {
+    public UserProfileDto(Long idUser, String firstName, String lastName, String secondName,
+                          String email, String userName, Integer rating, String avatarUrl) {
         this.idUser = idUser;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.secondName = secondName;
         this.email = email;
         this.userName = userName;
         this.rating = rating;
+        this.avatarUrl = avatarUrl;
+    }
+
+
+    public String getSecondName() {
+        return secondName;
+    }
+
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
+    }
+
+    public void setSecondName(String secondName) {
+        this.secondName = secondName;
     }
 
     public Long getIdUser() {
@@ -72,4 +91,5 @@ public class UserProfileDto {
     public void setRating(Integer rating) {
         this.rating = rating;
     }
+
 }

@@ -27,18 +27,6 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/profile")
-    public UserProfileDto getProfile() {
-        Long userId = getCurrentUserId();
-        return userService.getUserProfile(userId);
-    }
-
-    @PutMapping("/profile")
-    public UserProfileDto updateProfile(@RequestBody UserProfileDto dto) {
-        Long userId = getCurrentUserId();
-        User updatedUser = userService.updateUserProfile(userId, dto);
-        return userService.convertToUserProfileDto(updatedUser);
-    }
 
     private Long getCurrentUserId() {
         return 1L; // тест
