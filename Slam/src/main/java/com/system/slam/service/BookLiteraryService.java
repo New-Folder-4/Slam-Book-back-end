@@ -3,7 +3,6 @@ package com.system.slam.service;
 import com.system.slam.entity.Author;
 import com.system.slam.entity.BookLiterary;
 import com.system.slam.repository.BookLiteraryRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,7 +14,6 @@ public class BookLiteraryService {
     private final BookLiteraryRepository bookLiteraryRepository;
     private final AuthorService authorService;
 
-    @Autowired
     public BookLiteraryService(BookLiteraryRepository bookLiteraryRepository,
                                AuthorService authorService) {
         this.bookLiteraryRepository = bookLiteraryRepository;
@@ -25,11 +23,10 @@ public class BookLiteraryService {
     public BookLiterary createBookLiterary(Long authorId,
                                            String bookName,
                                            String note) {
-
         Author author = authorService.getAuthor(authorId);
 
         BookLiterary book = new BookLiterary();
-        book.setAutor(author);
+        book.setAuthor(author);
         book.setBookName(bookName);
         book.setNote(note);
 
@@ -59,5 +56,8 @@ public class BookLiteraryService {
                 .filter(b -> b.getBookName() != null && b.getBookName().contains(namePart))
                 .collect(Collectors.toList());
     }
-}
 
+    public List<BookLiterary> findAll() {
+        return bookLiteraryRepository.findAll();
+    }
+}

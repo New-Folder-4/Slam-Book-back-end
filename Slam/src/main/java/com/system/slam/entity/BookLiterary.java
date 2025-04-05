@@ -42,11 +42,11 @@ public class BookLiterary {
         this.idBookLiterary = idBookLiterary;
     }
 
-    public Author getAutor() {
+    public Author getAuthor() {
         return author;
     }
 
-    public void setAutor(Author author) {
+    public void setAuthor(Author author) {
         this.author = author;
     }
 
@@ -86,7 +86,7 @@ public class BookLiterary {
     public String toString() {
         return "BookLiterary{" +
                 "idBookLiterary=" + idBookLiterary +
-                ", autor=" + author +
+                ", author=" + author +
                 ", bookName='" + bookName + '\'' +
                 ", note='" + note + '\'' +
                 '}';

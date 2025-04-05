@@ -83,6 +83,7 @@ public class SecurityConfig {
                         .requestMatchers("/exchange/**").permitAll()
                         .requestMatchers("/delivery/**").permitAll()
                         .requestMatchers("/isbn/**").permitAll()
+                        .requestMatchers("/**").permitAll()
                         //.requestMatchers("/user/**").hasAnyRole("USER", "STAFF", "ADMIN")
                         //.requestMatchers("/staff/**").hasAnyRole("STAFF", "ADMIN")
                         //.requestMatchers("/admin/**").hasRole("ADMIN")
