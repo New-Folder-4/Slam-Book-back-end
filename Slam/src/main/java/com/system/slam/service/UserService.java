@@ -3,6 +3,7 @@ package com.system.slam.service;
 import com.system.slam.entity.User;
 import com.system.slam.repository.UserRepository;
 import com.system.slam.web.dto.AuthResponseDto;
+import com.system.slam.web.dto.UserUpdateDto;
 import com.system.slam.web.security.JwtTokenProvider;
 import com.system.slam.web.dto.UserProfileDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,6 +73,9 @@ public class UserService {
         try {
             userValidationService.userIsNotExists(username);
 
+            User user = userRepository.findByUserName(username)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(username, password)
             );
@@ -80,7 +84,7 @@ public class UserService {
 
             Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
 
-            String token = jwtTokenProvider.generateToken(username, authorities);
+            String token = jwtTokenProvider.generateToken(username, authorities, user.getIdUser());
             return new AuthResponseDto(token);
 
         } catch (BadCredentialsException e) {
@@ -131,6 +135,45 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    public AuthResponseDto updateUserProfile(UserUpdateDto dto, Long currentUserId) {
+
+        User user = userRepository.findById(currentUserId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        userValidationService.validateUserExists(dto.getUserName(), dto.getEmail(), currentUserId);
+
+        String rawPassword = dto.getPassword();
+
+        if (dto.getFirstName() != null) {
+            user.setFirstName(dto.getFirstName());
+            System.out.println(dto.getFirstName());
+        }
+        if (dto.getLastName() != null) {
+            user.setLastName(dto.getLastName());
+            System.out.println(dto.getLastName());
+        }
+        if (dto.getSecondName() != null) {
+            user.setSecondName(dto.getSecondName());
+            System.out.println(dto.getSecondName());
+        }
+        if (dto.getEmail() != null) {
+            user.setEmail(dto.getEmail());
+            System.out.println(dto.getEmail());
+        }
+        if (dto.getUserName() != null) {
+            user.setUserName(dto.getUserName());
+            System.out.println(dto.getUserName());
+        }
+        if (dto.getPassword() != null) {
+            user.setPassword(passwordEncoder.encode(rawPassword));
+        }
+
+        userRepository.save(user);
+
+        return authenticateUser(dto.getUserName(), rawPassword);
+    }
+
+
     public UserProfileDto convertToUserProfileDto(User user) {
         return new UserProfileDto(
                 user.getIdUser(),
@@ -171,5 +214,15 @@ public class UserService {
     public void deleteUser(Long userId) {
         userRepository.deleteById(userId);
     }
+
+    public boolean existsByUsername(String username) {
+        return userRepository.existsByUserName(username);
+    }
+
+    public boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
+
 }
 

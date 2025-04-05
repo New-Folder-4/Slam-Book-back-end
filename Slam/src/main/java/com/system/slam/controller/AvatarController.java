@@ -15,8 +15,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 
@@ -167,4 +166,30 @@ public class AvatarController {
             return ResponseEntity.internalServerError().build();
         }
     }
+
+    @GetMapping("/default/all")
+    public ResponseEntity<List<Map<String, Object>>> getAllDefaultAvatars() throws IOException {
+        List<Map<String, Object>> avatars = new ArrayList<>();
+
+        for (int i = 1; i <= DEFAULT_AVATARS_COUNT; i++) {
+            try {
+                Resource resource = new ClassPathResource("static/avatars/default/" + i + ".png");
+                if (!resource.exists()) continue;
+
+                byte[] imageBytes = Files.readAllBytes(Paths.get(resource.getURI()));
+                String base64Image = Base64.getEncoder().encodeToString(imageBytes);
+                String imageSrc = "data:image/png;base64," + base64Image;
+
+                avatars.add(Map.of(
+                        "id", i,
+                        "imageData", imageSrc
+                ));
+            } catch (Exception e) {
+                System.out.println("Error processing avatar " + i + ": " + e.getMessage());
+            }
+        }
+
+        return ResponseEntity.ok(avatars);
+    }
+
 }
