@@ -23,6 +23,23 @@ public class UserValidationService {
         }
     }
 
+    public void validateUserExists(String userName, String email, Long currentUserId) {
+        if (userName != null) {
+            userRepository.findByUserName(userName)
+                    .filter(user -> !user.getIdUser().equals(currentUserId))
+                    .ifPresent(user -> {
+                        throw new RuntimeException("Username already exists");
+                    });
+        }
+
+        if (email != null) {
+            userRepository.findByEmail(email)
+                    .filter(user -> !user.getIdUser().equals(currentUserId))
+                    .ifPresent(user -> {
+                        throw new RuntimeException("Email already exists");
+                    });
+        }
+    }
     public void userIsNotExists(String userName) {
         if (userRepository.findByUserName(userName).isEmpty()) {
             throw new RuntimeException("User with this username is not exists");

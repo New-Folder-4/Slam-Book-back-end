@@ -2,6 +2,7 @@ package com.system.slam.web.security;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
@@ -21,11 +22,12 @@ public class JwtTokenProvider {
     @Value("${app.jwt.expiration}")
     private int jwtExpirationInMs;
 
-    public String generateToken(String username, Collection<? extends GrantedAuthority> authorities) {
+    public String generateToken(String username, Collection<? extends GrantedAuthority> authorities, Long userId) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtExpirationInMs);
 
         Claims claims = Jwts.claims().setSubject(username);
+        claims.put("userId", userId);
         claims.put("roles", authorities.stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList()));
@@ -46,7 +48,15 @@ public class JwtTokenProvider {
                 .getBody();
         return claims.getSubject();
     }
+    public Long getUserIdFromToken(String token) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
 
+        return claims.get("userId", Long.class);
+    }
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder()

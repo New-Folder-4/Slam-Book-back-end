@@ -32,5 +32,9 @@ public class JustCorsFilter implements Filter {
         } else {
             chain.doFilter(req, res);
         }
+
+        if (request.getRequestURI().startsWith("/avatars/")) {
+            response.setHeader("Cache-Control", "public, max-age=604800"); // Кеширование ав на 7 дней
+        }
     }
 }
