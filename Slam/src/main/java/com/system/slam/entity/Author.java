@@ -8,21 +8,19 @@ import java.util.Objects;
 public class Author {
 
     @Id
-    @Column(name = "idAuthor", nullable = false)
+    @Column(name = "id_author", nullable = false)
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long idAuthor;
 
-    @Column(name = "LastName", length = 20, nullable = false)
+    @Column(name = "last_name", length = 20, nullable = false)
     private String lastName;
 
-    @Column(name = "FirstName", length = 20)
+    @Column(name = "first_name", length = 20)
     private String firstName;
 
     public Author() {}
 
-    public Author(Long idAuthor,
-                  String lastName,
-                  String firstName) {
+    public Author(Long idAuthor, String lastName, String firstName) {
         this.idAuthor = idAuthor;
         this.lastName = lastName;
         this.firstName = firstName;
@@ -53,10 +51,10 @@ public class Author {
     }
 
     @Override
-    public boolean equals(Object object) {
-        if (this == object) return true;
-        if (object == null || getClass() != object.getClass()) return false;
-        Author author = (Author) object;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Author)) return false;
+        Author author = (Author) o;
         return Objects.equals(idAuthor, author.idAuthor) &&
                 Objects.equals(lastName, author.lastName) &&
                 Objects.equals(firstName, author.firstName);
@@ -69,8 +67,8 @@ public class Author {
 
     @Override
     public String toString() {
-        return "Autor{" +
-                "idAutor=" + idAuthor +
+        return "Author{" +
+                "idAuthor=" + idAuthor +
                 ", lastName='" + lastName + '\'' +
                 ", firstName='" + firstName + '\'' +
                 '}';

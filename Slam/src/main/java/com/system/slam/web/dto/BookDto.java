@@ -3,20 +3,20 @@ package com.system.slam.web.dto;
 public class BookDto {
     private Long idBookLiterary;
     private Long idAuthor;
-    private String firstName;
-    private String lastName;
+    private String bookName;
+    private String note;
 
     public BookDto() {
     }
 
     public BookDto(Long idBookLiterary,
                    Long idAuthor,
-                   String firstName,
-                   String lastName) {
+                   String bookName,
+                   String note) {
         this.idBookLiterary = idBookLiterary;
         this.idAuthor = idAuthor;
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.bookName = bookName;
+        this.note = note;
     }
 
     public Long getIdBookLiterary() {
@@ -35,19 +35,20 @@ public class BookDto {
         this.idAuthor = idAuthor;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getBookName() {
+        return bookName;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setBookName(String bookName) {
+        this.bookName = bookName;
     }
 
-    public String getLastName() {
-        return lastName;
+    public String getNote() {
+        return note;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setNote(String note) {
+        this.note = note;
     }
 }
+
