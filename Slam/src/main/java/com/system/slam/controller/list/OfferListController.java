@@ -3,7 +3,10 @@ package com.system.slam.controller.list;
 import com.system.slam.web.dto.OfferDto;
 import com.system.slam.entity.list.OfferList;
 import com.system.slam.service.list.OfferListService;
+import com.system.slam.web.security.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -64,9 +67,11 @@ public class OfferListController {
     }
 
     private Long getCurrentUserId() {
-        return 1L; // для теста
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        Long currentUserId = userDetails.getId();
+        return currentUserId;
     }
-
     private List<Long> getCategoryIdsForOffer(Long offerId) {
         return new ArrayList<>();
     }

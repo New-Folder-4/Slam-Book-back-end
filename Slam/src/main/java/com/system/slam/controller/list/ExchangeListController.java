@@ -5,7 +5,10 @@ import com.system.slam.entity.list.UserExchangeList;
 import com.system.slam.service.list.ExchangeListService;
 import com.system.slam.web.dto.*;
 import com.system.slam.service.MatchingService;
+import com.system.slam.web.security.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -76,7 +79,10 @@ public class ExchangeListController {
     }
 
     private Long getCurrentUserId() {
-        return 1L; // тест
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        Long currentUserId = userDetails.getId();
+        return currentUserId;
     }
 }
 
