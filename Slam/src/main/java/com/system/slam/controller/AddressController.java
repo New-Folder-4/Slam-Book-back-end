@@ -2,6 +2,9 @@ package com.system.slam.controller;
 
 import com.system.slam.web.dto.UserAddressDto;
 import com.system.slam.service.UserAddressService;
+import com.system.slam.web.security.CustomUserDetails;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,18 +31,22 @@ public class AddressController {
         return userAddressService.createAddress(userId, dto);
     }
 
-    @PutMapping("/{addressId}")
-    public UserAddressDto updateAddress(@PathVariable Long addressId,
-                                        @RequestBody UserAddressDto dto) {
-        return userAddressService.updateAddress(addressId, dto);
+    @PutMapping
+    public UserAddressDto updateAddress(@RequestBody UserAddressDto dto) {
+        Long userId = getCurrentUserId();
+        return userAddressService.updateAddress(userId, dto);
     }
 
-    @DeleteMapping("/{addressId}")
-    public void deleteAddress(@PathVariable Long addressId) {
-        userAddressService.deleteAddress(addressId);
+    @DeleteMapping
+    public void deleteAddress(@RequestBody UserAddressDto dto) {
+        Long userId = getCurrentUserId();
+        userAddressService.deleteAddress(userId);
     }
 
     private Long getCurrentUserId() {
-        return 1L; // тест
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        Long currentUserId = userDetails.getId();
+        return currentUserId;
     }
 }

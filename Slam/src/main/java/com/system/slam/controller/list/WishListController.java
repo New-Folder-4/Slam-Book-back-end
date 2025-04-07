@@ -3,7 +3,10 @@ package com.system.slam.controller.list;
 import com.system.slam.web.dto.WishDto;
 import com.system.slam.entity.list.WishList;
 import com.system.slam.service.list.WishListService;
+import com.system.slam.web.security.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -62,7 +65,10 @@ public class WishListController {
     }
 
     private Long getCurrentUserId() {
-        return 1L; // для теста
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        Long currentUserId = userDetails.getId();
+        return currentUserId;
     }
 
     private WishDto convertToDto(WishList wish, List<Long> categoryIds) {
