@@ -31,7 +31,7 @@ public class WishListController {
 
         Long userId = securityContextService.getCurrentUserId();
         if (userId == null) {
-            throw new RuntimeException("Пользователь не аутентифицирован!");
+            throw new RuntimeException("User is not authentication!");
         }
         System.out.println("User ID: " + userId);
 
@@ -40,12 +40,12 @@ public class WishListController {
                     userId,
                     userId,
                     dto.getStatus(),
-                    dto.getCategoryIds() != null ? dto.getCategoryIds() : Collections.emptyList() // Защита от null
+                    dto.getCategoryIds() != null ? dto.getCategoryIds() : Collections.emptyList()
             );
             return convertToDto(saved, dto.getCategoryIds());
         } catch (Exception e) {
-            e.printStackTrace(); // Посмотрите в консоли сервера, какое исключение вылетает
-            throw new RuntimeException("Ошибка при создании желания", e);
+            e.printStackTrace();
+            throw new RuntimeException("Error while creating wish", e);
         }
     }
 
