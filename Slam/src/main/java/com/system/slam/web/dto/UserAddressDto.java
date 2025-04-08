@@ -1,5 +1,7 @@
 package com.system.slam.web.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class UserAddressDto {
     private Long idUserAddress;
     private String addrIndex;
@@ -86,11 +88,8 @@ public class UserAddressDto {
         this.addrApart = addrApart;
     }
 
-    public boolean isDefault() {
+    public boolean getIsDefault() {
         return isDefault;
     }
-
-    public void setDefault(boolean aDefault) {
-        isDefault = aDefault;
-    }
+    public void setDefault(boolean isDefault) { this.isDefault = isDefault; }
 }

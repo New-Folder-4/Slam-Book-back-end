@@ -16,6 +16,18 @@ public class CustomUserDetails implements UserDetails {
         this.user = user;
     }
 
+    public CustomUserDetails(Long id, String username,
+                             Collection<? extends GrantedAuthority> authorities) {
+        this.user = new User();
+        this.user.setIdUser(id);
+        this.user.setUserName(username);
+
+        this.user.setSuperUser(authorities.stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN")));
+        this.user.setStaff(authorities.stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_STAFF")));
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         if (user.isSuperUser()) {

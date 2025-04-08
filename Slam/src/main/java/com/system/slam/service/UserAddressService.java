@@ -34,7 +34,7 @@ public class UserAddressService {
         address.setAddrHouse(dto.getAddrHouse());
         address.setAddrStructure(dto.getAddrStructure());
         address.setAddrApart(dto.getAddrApart());
-        address.setDefault(dto.isDefault());
+        address.setDefault(dto.getIsDefault());
 
         UserAddress saved = userAddressRepository.save(address);
         return convertToDto(saved);
@@ -50,8 +50,7 @@ public class UserAddressService {
         if (dto.getAddrHouse() != null)  address.setAddrHouse(dto.getAddrHouse());
         if (dto.getAddrStructure() != null) address.setAddrStructure(dto.getAddrStructure());
         if (dto.getAddrApart() != null)  address.setAddrApart(dto.getAddrApart());
-
-        address.setDefault(dto.isDefault());
+        address.setDefault(dto.getIsDefault());
 
         UserAddress updated = userAddressRepository.save(address);
         return convertToDto(updated);

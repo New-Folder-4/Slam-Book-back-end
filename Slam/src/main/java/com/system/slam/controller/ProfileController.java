@@ -1,5 +1,6 @@
 package com.system.slam.controller;
 
+import com.system.slam.service.SecurityContextService;
 import com.system.slam.service.UserService;
 import com.system.slam.web.dto.AuthResponseDto;
 import com.system.slam.web.dto.UserProfileDto;
@@ -19,10 +20,13 @@ import java.util.Collections;
 public class ProfileController {
 
     private final UserService userService;
+    private final SecurityContextService securityContextService;
 
        @Autowired
-    public ProfileController(UserService userService) {
+    public ProfileController(UserService userService,
+                             SecurityContextService securityContextService) {
         this.userService = userService;
+        this.securityContextService = securityContextService;
     }
 
     @GetMapping
@@ -35,9 +39,8 @@ public class ProfileController {
     }
     @PutMapping
     public ResponseEntity<?> updateCurrentUserProfile(@Valid @RequestBody UserUpdateDto userUpdateDto) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        Long currentUserId = userDetails.getId();
+
+        Long currentUserId = securityContextService.getCurrentUserId();
 
         try {
 
