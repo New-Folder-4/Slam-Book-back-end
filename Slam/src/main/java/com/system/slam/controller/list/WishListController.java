@@ -11,6 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -24,6 +25,28 @@ public class WishListController {
                               SecurityContextService securityContextService) {
         this.wishListService = wishListService;
         this.securityContextService = securityContextService;
+    }
+    @PostMapping("/v2")
+    public WishDto createWish2(@RequestBody WishDto dto) {
+
+        Long userId = securityContextService.getCurrentUserId();
+        if (userId == null) {
+            throw new RuntimeException("Пользователь не аутентифицирован!");
+        }
+        System.out.println("User ID: " + userId);
+
+        try {
+            WishList saved = wishListService.createWish(
+                    userId,
+                    userId,
+                    dto.getStatus(),
+                    dto.getCategoryIds() != null ? dto.getCategoryIds() : Collections.emptyList() // Защита от null
+            );
+            return convertToDto(saved, dto.getCategoryIds());
+        } catch (Exception e) {
+            e.printStackTrace(); // Посмотрите в консоли сервера, какое исключение вылетает
+            throw new RuntimeException("Ошибка при создании желания", e);
+        }
     }
 
     @PostMapping
