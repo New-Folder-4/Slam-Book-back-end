@@ -1,5 +1,6 @@
 package com.system.slam.controller.list;
 
+import com.system.slam.service.SecurityContextService;
 import com.system.slam.web.dto.OfferDto;
 import com.system.slam.entity.list.OfferList;
 import com.system.slam.service.list.OfferListService;
@@ -16,10 +17,13 @@ import java.util.List;
 public class OfferListController {
 
     private final OfferListService offerListService;
+    private final SecurityContextService securityContextService;
 
     @Autowired
-    public OfferListController(OfferListService offerListService) {
+    public OfferListController(OfferListService offerListService,
+                               SecurityContextService securityContextService) {
         this.offerListService = offerListService;
+        this.securityContextService = securityContextService;
     }
 
     @PostMapping
@@ -55,7 +59,7 @@ public class OfferListController {
 
     @GetMapping("/my")
     public List<OfferDto> getMyOffers() {
-        Long userId = getCurrentUserId();
+        Long userId = securityContextService.getCurrentUserId();
         List<OfferList> allOffers = offerListService.getAllOffersByUser(userId);
 
         List<OfferDto> result = new ArrayList<>();
@@ -66,12 +70,6 @@ public class OfferListController {
         return result;
     }
 
-    private Long getCurrentUserId() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        Long currentUserId = userDetails.getId();
-        return currentUserId;
-    }
     private List<Long> getCategoryIdsForOffer(Long offerId) {
         return new ArrayList<>();
     }

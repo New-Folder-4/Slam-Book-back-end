@@ -46,18 +46,17 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             logger.info("Token extracted: " + token);
 
             if (token != null && jwtTokenProvider.validateToken(token)) {
-                String username = jwtTokenProvider.getUsernameFromToken(token);
-                logger.info("User authenticated: " + username);
-
-                // Извлекаем роли из токена
+                // Достаём данные из токена
                 Claims claims = jwtTokenProvider.getClaimsFromToken(token);
+                String username = claims.getSubject();
+                Long userId = claims.get("userId", Long.class);
+
                 Collection<? extends GrantedAuthority> authorities = ((List<String>) claims.get("roles"))
                         .stream()
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
 
-                // Загружаем данные пользователя
-                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+                UserDetails userDetails = new CustomUserDetails(userId, username, authorities);
                 logger.info("User roles: " + authorities);
 
                 // Создаем аутентификацию и устанавливаем роли

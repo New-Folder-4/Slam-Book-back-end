@@ -2,6 +2,7 @@ package com.system.slam.controller.list;
 
 import com.system.slam.entity.list.ExchangeList;
 import com.system.slam.entity.list.UserExchangeList;
+import com.system.slam.service.SecurityContextService;
 import com.system.slam.service.list.ExchangeListService;
 import com.system.slam.web.dto.*;
 import com.system.slam.service.MatchingService;
@@ -18,17 +19,20 @@ public class ExchangeListController {
 
     private final MatchingService matchingService;
     private final ExchangeListService exchangeListService;
+    private final SecurityContextService securityContextService;
 
     @Autowired
     public ExchangeListController(MatchingService matchingService,
-                                  ExchangeListService exchangeListService) {
+                                  ExchangeListService exchangeListService,
+                                  SecurityContextService securityContextService) {
         this.matchingService = matchingService;
         this.exchangeListService = exchangeListService;
+        this.securityContextService = securityContextService;
     }
 
     @GetMapping("/matches")
     public List<ExchangeMatchDto> getMatches() {
-        Long userId = getCurrentUserId();
+        Long userId = securityContextService.getCurrentUserId();
         return matchingService.findMatchesForUser(userId);
     }
 
@@ -78,11 +82,5 @@ public class ExchangeListController {
         return dto;
     }
 
-    private Long getCurrentUserId() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        Long currentUserId = userDetails.getId();
-        return currentUserId;
-    }
 }
 

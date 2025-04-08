@@ -1,5 +1,6 @@
 package com.system.slam.controller.list;
 
+import com.system.slam.service.SecurityContextService;
 import com.system.slam.web.dto.WishDto;
 import com.system.slam.entity.list.WishList;
 import com.system.slam.service.list.WishListService;
@@ -17,10 +18,12 @@ import java.util.List;
 public class WishListController {
 
     private final WishListService wishListService;
-
+    private final SecurityContextService securityContextService;
     @Autowired
-    public WishListController(WishListService wishListService) {
+    public WishListController(WishListService wishListService,
+                              SecurityContextService securityContextService) {
         this.wishListService = wishListService;
+        this.securityContextService = securityContextService;
     }
 
     @PostMapping
@@ -53,7 +56,7 @@ public class WishListController {
 
     @GetMapping("/my")
     public List<WishDto> getMyWishes() {
-        Long userId = getCurrentUserId();
+        Long userId = securityContextService.getCurrentUserId();
         List<WishList> allWishes = wishListService.getAllByUserId(userId);
 
         List<WishDto> result = new ArrayList<>();
@@ -62,13 +65,6 @@ public class WishListController {
             result.add(convertToDto(wish, catIds));
         }
         return result;
-    }
-
-    private Long getCurrentUserId() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        Long currentUserId = userDetails.getId();
-        return currentUserId;
     }
 
     private WishDto convertToDto(WishList wish, List<Long> categoryIds) {
