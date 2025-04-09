@@ -40,7 +40,7 @@ public class OfferListService {
             Long userId,
             Long bookLiteraryId,
             String isbn,
-            LocalDateTime yearPublishing,
+            int yearPublishing,
             String initialStatus,
             List<Long> categoryIds
     ) {
@@ -76,7 +76,7 @@ public class OfferListService {
     public OfferList updateOffer(
             Long offerId,
             String newIsbn,
-            LocalDateTime newYearPublishing,
+            int newYearPublishing,
             String newStatusName,
             List<Long> newCategoryIds
     ) {
@@ -86,7 +86,7 @@ public class OfferListService {
         if (newIsbn != null) {
             offer.setIsbn(newIsbn);
         }
-        if (newYearPublishing != null) {
+        if (newYearPublishing != 0) {
             offer.setYearPublishing(newYearPublishing);
         }
         if (newStatusName != null) {

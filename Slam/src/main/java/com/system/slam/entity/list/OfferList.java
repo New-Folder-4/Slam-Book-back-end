@@ -28,8 +28,8 @@ public class OfferList {
     @Column(name = "ISBN", length = 13)
     private String isbn;
 
-    @Column(name = "YearPublishing", nullable = false)
-    private LocalDateTime yearPublishing;
+    @Column(name = "YearPublishing", nullable = false, length = 4)
+    private int yearPublishing;
 
     @Column(name = "CreateAt", nullable = false)
     private LocalDateTime createAt;
@@ -51,9 +51,14 @@ public class OfferList {
 
     public OfferList(Long idOfferList,
                      BookLiterary bookLiterary,
+<<<<<<< HEAD
                      User user,
                      String isbn,
                      LocalDateTime yearPublishing,
+=======
+                     User user, String isbn,
+                     int yearPublishing,
+>>>>>>> ba2e78c93960b94bb9e60db0589e1156e10c6a97
                      LocalDateTime createAt,
                      LocalDateTime updateAt,
                      Status status,
@@ -101,13 +106,10 @@ public class OfferList {
         this.isbn = isbn;
     }
 
-    public LocalDateTime getYearPublishing() {
-        return yearPublishing;
-    }
 
-    public void setYearPublishing(LocalDateTime yearPublishing) {
-        this.yearPublishing = yearPublishing;
-    }
+    public int getYearPublishing() { return yearPublishing; }
+
+    public void setYearPublishing(int yearPublishing) { this.yearPublishing = yearPublishing; }
 
     public LocalDateTime getCreateAt() {
         return createAt;

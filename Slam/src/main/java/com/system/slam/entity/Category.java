@@ -12,13 +12,13 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long idCategory;
 
-    @Column(name = "Name", length = 25, nullable = false)
+    @Column(name = "Name", length = 50, nullable = false)
     private String name;
 
-    @Column(name = "IdParent", nullable = false)
+    @Column(name = "IdParent")
     private Integer idParent;
 
-    @Column(name = "MultiSelect", nullable = false)
+    @Column(name = "MultiSelect")
     private boolean multiSelect;
 
     public Category() {}

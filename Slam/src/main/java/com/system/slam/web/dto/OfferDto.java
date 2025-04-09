@@ -8,7 +8,7 @@ public class OfferDto {
     private Long userId;
     private Long bookLiteraryId;
     private String isbn;
-    private LocalDateTime yearPublishing;
+    private int yearPublishing;
     private LocalDateTime createAt;
     private LocalDateTime updateAt;
     private String status;
@@ -20,7 +20,7 @@ public class OfferDto {
                     Long userId,
                     Long bookLiteraryId,
                     String isbn,
-                    LocalDateTime yearPublishing,
+                    int yearPublishing,
                     LocalDateTime createAt,
                     LocalDateTime updateAt,
                     String status,
@@ -68,13 +68,9 @@ public class OfferDto {
         this.isbn = isbn;
     }
 
-    public LocalDateTime getYearPublishing() {
-        return yearPublishing;
-    }
+    public int getYearPublishing() { return yearPublishing; }
 
-    public void setYearPublishing(LocalDateTime yearPublishing) {
-        this.yearPublishing = yearPublishing;
-    }
+    public void setYearPublishing(int yearPublishing) { this.yearPublishing = yearPublishing; }
 
     public LocalDateTime getCreateAt() {
         return createAt;
