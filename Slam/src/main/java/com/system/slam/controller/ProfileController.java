@@ -5,7 +5,6 @@ import com.system.slam.service.UserService;
 import com.system.slam.web.dto.AuthResponseDto;
 import com.system.slam.web.dto.UserProfileDto;
 import com.system.slam.web.dto.UserUpdateDto;
-import com.system.slam.web.security.CustomUserDetails;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
