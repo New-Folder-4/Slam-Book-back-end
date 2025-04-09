@@ -51,14 +51,9 @@ public class OfferList {
 
     public OfferList(Long idOfferList,
                      BookLiterary bookLiterary,
-<<<<<<< HEAD
                      User user,
                      String isbn,
-                     LocalDateTime yearPublishing,
-=======
-                     User user, String isbn,
                      int yearPublishing,
->>>>>>> ba2e78c93960b94bb9e60db0589e1156e10c6a97
                      LocalDateTime createAt,
                      LocalDateTime updateAt,
                      Status status,
