@@ -11,7 +11,7 @@ databaseChangeLog:
                   valueNumeric: 1
               - column:
                   name: name
-                  value: active
+                  value: "active"
         - insert:
             tableName: status
             columns:
@@ -20,4 +20,39 @@ databaseChangeLog:
                   valueNumeric: 2
               - column:
                   name: name
-                  value: deleted
+                  value: "deleted"
+
+  - changeSet:
+      id: init-category
+      author: GTZ
+      changes:
+        - insert:
+            tableName: category
+            columns:
+              - column:
+                  name: id_category
+                  valueNumeric: 1
+              - column:
+                  name: id_parent
+                  valueNumeric: 0
+              - column:
+                  name: multi_select
+                  valueBoolean: false
+              - column:
+                  name: name
+                  value: "Эпическое фэнтези"
+        - insert:
+            tableName: category
+            columns:
+              - column:
+                  name: id_category
+                  valueNumeric: 2
+              - column:
+                  name: id_parent
+                  valueNumeric: 0
+              - column:
+                  name: multi_select
+                  valueBoolean: false
+              - column:
+                  name: name
+                  value: "Темное фэнтези"
