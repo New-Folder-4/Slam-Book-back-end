@@ -4,10 +4,7 @@ import com.system.slam.service.SecurityContextService;
 import com.system.slam.web.dto.OfferDto;
 import com.system.slam.entity.list.OfferList;
 import com.system.slam.service.list.OfferListService;
-import com.system.slam.web.security.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,8 +25,9 @@ public class OfferListController {
 
     @PostMapping
     public OfferDto createOffer(@RequestBody OfferDto dto) {
+        Long userId = securityContextService.getCurrentUserId();
         OfferList saved = offerListService.createOffer(
-                dto.getUserId(),
+                userId,
                 dto.getBookLiteraryId(),
                 dto.getIsbn(),
                 dto.getYearPublishing(),
@@ -39,10 +37,11 @@ public class OfferListController {
         return convertToDto(saved, dto.getCategoryIds());
     }
 
-    @PutMapping("/{id}")
-    public OfferDto updateOffer(@PathVariable Long id, @RequestBody OfferDto dto) {
+    @PutMapping
+    public OfferDto updateOffer(@RequestBody OfferDto dto) {
+        Long userId = securityContextService.getCurrentUserId();
         OfferList updated = offerListService.updateOffer(
-                id,
+                userId,
                 dto.getIsbn(),
                 dto.getYearPublishing(),
                 dto.getStatus(),
@@ -51,10 +50,10 @@ public class OfferListController {
         return convertToDto(updated, dto.getCategoryIds());
     }
 
-    @DeleteMapping("/{id}")
-    public void deleteOffer(@PathVariable Long id,
-                            @RequestParam(defaultValue = "false") boolean physicalDelete) {
-        offerListService.deleteOffer(id, physicalDelete);
+    @DeleteMapping
+    public void deleteOffer(@RequestParam(defaultValue = "false") boolean physicalDelete) {
+        Long userId = securityContextService.getCurrentUserId();
+        offerListService.deleteOffer(userId, physicalDelete);
     }
 
     @GetMapping("/my")
