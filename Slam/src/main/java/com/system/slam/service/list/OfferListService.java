@@ -60,6 +60,7 @@ public class OfferListService {
         offer.setCreateAt(LocalDateTime.now());
         offer.setUpdateAt(LocalDateTime.now());
         offer.setStatus(status);
+        offer.setCategoryIds(categoryIds);
 
         OfferList savedOffer = offerListRepository.save(offer);
 
@@ -95,6 +96,7 @@ public class OfferListService {
         }
 
         offer.setUpdateAt(LocalDateTime.now());
+        offer.setCategoryIds(newCategoryIds);
         OfferList updatedOffer = offerListRepository.save(offer);
 
         userListService.updateCategoriesForList(

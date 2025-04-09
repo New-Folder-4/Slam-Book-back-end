@@ -5,6 +5,7 @@ import com.system.slam.entity.User;
 import com.system.slam.entity.UserAddress;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -34,6 +35,12 @@ public class WishList {
     @JoinColumn(name = "IdUserAddress", nullable = false)
     private UserAddress userAddress;
 
+    @ElementCollection
+    @CollectionTable(name = "wish_list_category_ids",
+            joinColumns = @JoinColumn(name = "wish_list_id"))
+    @Column(name = "categoryIds")
+    private List<Long> categoryIds;
+
     public WishList() {}
 
     public WishList(Long idWishList,
@@ -41,13 +48,15 @@ public class WishList {
                     LocalDateTime createAt,
                     LocalDateTime updateAt,
                     Status status,
-                    UserAddress userAddress) {
+                    UserAddress userAddress,
+                    List<Long> categoryIds) {
         this.idWishList = idWishList;
         this.user = user;
         this.createAt = createAt;
         this.updateAt = updateAt;
         this.status = status;
         this.userAddress = userAddress;
+        this.categoryIds = categoryIds;
     }
 
     public Long getIdWishList() {
@@ -98,6 +107,14 @@ public class WishList {
         this.userAddress = userAddress;
     }
 
+    public List<Long> getCategoryIds() {
+        return categoryIds;
+    }
+
+    public void setCategoryIds(List<Long> categoryIds) {
+        this.categoryIds = categoryIds;
+    }
+
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;
@@ -108,13 +125,15 @@ public class WishList {
                 Objects.equals(createAt, wishList.createAt) &&
                 Objects.equals(updateAt, wishList.updateAt) &&
                 Objects.equals(status, wishList.status) &&
-                Objects.equals(userAddress, wishList.userAddress);
+                Objects.equals(userAddress, wishList.userAddress) &&
+                Objects.equals(categoryIds, wishList.categoryIds);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(idWishList, user, createAt,
-                updateAt, status, userAddress);
+        return Objects.hash(idWishList, user,
+                createAt, updateAt, status,
+                userAddress, categoryIds);
     }
 
     @Override
@@ -126,6 +145,8 @@ public class WishList {
                 ", updateAt=" + updateAt +
                 ", status=" + status +
                 ", userAddress=" + userAddress +
+                ", categoryIds=" + categoryIds +
                 '}';
     }
 }
+

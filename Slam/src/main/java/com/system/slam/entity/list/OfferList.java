@@ -5,6 +5,7 @@ import com.system.slam.entity.Status;
 import com.system.slam.entity.User;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -40,15 +41,23 @@ public class OfferList {
     @JoinColumn(name = "IdStatus", nullable = false)
     private Status status;
 
+    @ElementCollection
+    @CollectionTable(name = "offer_list_category_ids",
+            joinColumns = @JoinColumn(name = "offer_list_id"))
+    @Column(name = "categoryIds")
+    private List<Long> categoryIds;
+
     public OfferList() {}
 
     public OfferList(Long idOfferList,
                      BookLiterary bookLiterary,
-                     User user, String isbn,
+                     User user,
+                     String isbn,
                      LocalDateTime yearPublishing,
                      LocalDateTime createAt,
                      LocalDateTime updateAt,
-                     Status status) {
+                     Status status,
+                     List<Long> categoryIds) {
         this.idOfferList = idOfferList;
         this.bookLiterary = bookLiterary;
         this.user = user;
@@ -57,6 +66,7 @@ public class OfferList {
         this.createAt = createAt;
         this.updateAt = updateAt;
         this.status = status;
+        this.categoryIds = categoryIds;
     }
 
     public Long getIdOfferList() {
@@ -123,6 +133,14 @@ public class OfferList {
         this.status = status;
     }
 
+    public List<Long> getCategoryIds() {
+        return categoryIds;
+    }
+
+    public void setCategoryIds(List<Long> categoryIds) {
+        this.categoryIds = categoryIds;
+    }
+
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;
@@ -140,8 +158,10 @@ public class OfferList {
 
     @Override
     public int hashCode() {
-        return Objects.hash(idOfferList, bookLiterary, user, isbn,
-                yearPublishing, createAt, updateAt, status);
+        return Objects.hash(idOfferList,
+                bookLiterary, user, isbn,
+                yearPublishing, createAt,
+                updateAt, status);
     }
 
     @Override

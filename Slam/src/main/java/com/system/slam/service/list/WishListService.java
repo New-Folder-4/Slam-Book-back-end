@@ -44,6 +44,8 @@ public class WishListService {
         wish.setCreateAt(LocalDateTime.now());
         wish.setUpdateAt(LocalDateTime.now());
 
+        wish.setCategoryIds(categoryIds);
+
         WishList savedWish = wishListRepository.save(wish);
         userListService.addCategoriesToList(savedWish.getIdWishList(), 2, categoryIds);
 
@@ -69,6 +71,7 @@ public class WishListService {
         }
 
         wish.setUpdateAt(LocalDateTime.now());
+        wish.setCategoryIds(newCategoryIds);
         WishList updatedWish = wishListRepository.save(wish);
 
         userListService.updateCategoriesForList(updatedWish.getIdWishList(), 2, newCategoryIds);
