@@ -36,16 +36,16 @@ public class MatchingService {
         List<ExchangeMatchDto> result = new ArrayList<>();
 
         for (WishList wish : userWishes) {
-            Set<Long> wishCategoryIds = new HashSet<>(userListService.getCategoryIdsForList(
-                    wish.getIdWishList(), 2));
+            Set<Long> wishCategoryIds = new HashSet<>(
+                    userListService.getCategoryIdsForList(wish.getIdWishList(), 2));
             List<OfferList> allOffers = getFreeOffersExceptUser(userId);
 
             List<OfferDto> fullMatches = new ArrayList<>();
             List<OfferDto> partialMatches = new ArrayList<>();
 
             for (OfferList offer : allOffers) {
-                Set<Long> offerCategoryIds = new HashSet<>(userListService.getCategoryIdsForList(
-                        offer.getIdOfferList(), 1));
+                Set<Long> offerCategoryIds = new HashSet<>(
+                        userListService.getCategoryIdsForList(offer.getIdOfferList(), 1));
 
                 if (offerCategoryIds.containsAll(wishCategoryIds)) {
                     fullMatches.add(convertOfferToDto(offer));
@@ -55,15 +55,12 @@ public class MatchingService {
                 }
             }
             if (!fullMatches.isEmpty()) {
-                ExchangeMatchDto fullDto = new ExchangeMatchDto("full match", fullMatches);
-                result.add(fullDto);
+                result.add(new ExchangeMatchDto("full match", fullMatches));
             }
             if (!partialMatches.isEmpty()) {
-                ExchangeMatchDto partialDto = new ExchangeMatchDto("partial match", partialMatches);
-                result.add(partialDto);
+                result.add(new ExchangeMatchDto("partial match", partialMatches));
             }
         }
-
         return result;
     }
 
