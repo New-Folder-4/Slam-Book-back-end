@@ -21,6 +21,7 @@ public class ProfileService {
         this.securityContextService = securityContextService;
     }
 
+
     public ResponseEntity<UserProfileDto> getCurrentUserProfile() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();

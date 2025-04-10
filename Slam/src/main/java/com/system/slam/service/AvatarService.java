@@ -24,6 +24,7 @@ public class AvatarService {
     private final UserService userService;
     private final JwtTokenProvider jwtTokenProvider;
 
+
     private static final Set<String> ALLOWED_EXTENSIONS = Set.of(".png", ".jpg", ".jpeg", ".webp");
     private static final Map<String, MediaType> EXTENSION_TO_MEDIA_TYPE = Map.of(
             ".png", MediaType.IMAGE_PNG,

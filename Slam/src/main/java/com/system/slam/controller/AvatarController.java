@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class AvatarController {
     private final AvatarService avatarService;
 
+    
     public AvatarController(AvatarService avatarService) {
         this.avatarService = avatarService;
     }

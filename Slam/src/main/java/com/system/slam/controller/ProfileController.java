@@ -21,6 +21,7 @@ public class ProfileController {
         return profileService.getCurrentUserProfile();
     }
 
+
     @PutMapping
     public ResponseEntity<?> updateCurrentUserProfile(@Valid @RequestBody UserUpdateDto userUpdateDto) {
         return profileService.updateCurrentUserProfile(userUpdateDto);
