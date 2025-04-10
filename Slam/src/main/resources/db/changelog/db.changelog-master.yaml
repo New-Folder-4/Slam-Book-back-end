@@ -1,0 +1,23 @@
+databaseChangeLog:
+  - changeSet:
+      id: init-status
+      author: GTZ
+      changes:
+        - insert:
+            tableName: status
+            columns:
+              - column:
+                  name: id_status
+                  valueNumeric: 1
+              - column:
+                  name: name
+                  value: active
+        - insert:
+            tableName: status
+            columns:
+              - column:
+                  name: id_status
+                  valueNumeric: 2
+              - column:
+                  name: name
+                  value: deleted
