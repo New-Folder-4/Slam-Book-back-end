@@ -19,4 +19,13 @@ public class NotificationService {
     public List<Notification> getNotificationsByUserId(Long idUser) {
         return notificationRepository.findByIdUser(idUser);
     }
+
+
+    public void deleteNotification(Long idNotification) {
+
+        if (!notificationRepository.existsById(idNotification)) {
+            throw new RuntimeException("Notification not found with id: " + idNotification);
+        }
+        notificationRepository.deleteById(idNotification);
+    }
 }
